@@ -352,7 +352,7 @@ namespace Galvanika
                 var compareValues = new List<int>();
                 for (int i = item.Key; i <= item.Value; i++)
                 {
-                    ProgramData value = DataGridTable[i] as ProgramData;
+                    ProgramData value = DataGridTable[i];
                     if (value == null)
                         break;
 
@@ -439,7 +439,7 @@ namespace Galvanika
                                 if (timerData == "0")
                                     timerData = value.AEM.ToLower();
                                 var temp = Parse(output);
-                                ProgramData valueNext = DataGridTable[i + 1] as ProgramData;
+                                ProgramData valueNext = DataGridTable[i + 1];
                                 if (valueNext.Operator.Contains("SE"))
                                 {
                                     i = i + 1;
@@ -449,7 +449,7 @@ namespace Galvanika
                                         if (TimerSE.Keys.Contains(valueNext.Bit.ToString()))
                                         {
                                             TimerSE.Remove(valueNext.Bit.ToString());
-                                            MyTimers valueTime = TimerGridTable.Where(u => u.Address == valueNext.Bit).SingleOrDefault() as MyTimers;
+                                            MyTimers valueTime = TimerGridTable.Where(u => u.Address == valueNext.Bit).SingleOrDefault();
                                             valueTime.Time = 0;
                                             valueTime.Value = 0;
                                         }
@@ -618,9 +618,9 @@ namespace Galvanika
 
                             if (tempValue) //если перед нами 1 то идем сюда
                             {
-                                ProgramData valueNext = DataGridTable[i + 1] as ProgramData;
+                                ProgramData valueNext = DataGridTable[i + 1];
                                 var valueToNext = ValueBool(valueNext);
-                                ProgramData valueNext2 = DataGridTable[i + 2] as ProgramData;
+                                ProgramData valueNext2 = DataGridTable[i + 2];
                                 var memory = MemoryGridTable.Find(u => u.Address == valueNext2.Bit);
                                 memory.CurrentValue = valueToNext.ToUpper();
                                 DB[valueNext2.Bit] = memory.CurrentValue;
@@ -630,7 +630,7 @@ namespace Galvanika
                             for (int j = i; j <= item.Value; j++)
                             {
                                 count++;
-                                ProgramData valueNext = DataGridTable[j + 1] as ProgramData;
+                                ProgramData valueNext = DataGridTable[j + 1];
                                 if (valueNext.Operator == value.AEM + ":")
                                 {
                                     i = i + count;
@@ -651,7 +651,7 @@ namespace Galvanika
                                 ValueBool(value);
 
                             //Смотрим сл. строку, если там R или S то не обнуляем output
-                            ProgramData valueNext = DataGridTable[i + 1] as ProgramData;
+                            ProgramData valueNext = DataGridTable[i + 1];
                             if (!valueNext.Operator.Contains("R"))
                                 if (!valueNext.Operator.Contains("S"))
                                     output = "";
@@ -669,7 +669,7 @@ namespace Galvanika
                                 ValueBool(value);
 
                             //Смотрим сл. строку, если там R или S то не обнуляем output
-                            ProgramData valueNext = DataGridTable[i + 1] as ProgramData;
+                            ProgramData valueNext = DataGridTable[i + 1];
                             if (!valueNext.Operator.Contains("R"))
                                 if (!valueNext.Operator.Contains("S"))
                                     output = "";
@@ -694,7 +694,7 @@ namespace Galvanika
                                     for (int j = i; j <= item.Value; j++)
                                     {
                                         count++;
-                                        ProgramData valueNext = DataGridTable[j + 1] as ProgramData;
+                                        ProgramData valueNext = DataGridTable[j + 1];
                                         if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
                                         {
                                             i = i + count - 1; //чтоб в нее зашло
@@ -710,7 +710,7 @@ namespace Galvanika
                                 for (int j = i; j <= item.Value; j++)
                                 {
                                     count++;
-                                    ProgramData valueNext = DataGridTable[j + 1] as ProgramData;
+                                    ProgramData valueNext = DataGridTable[j + 1];
                                     if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
                                     {
                                         i = i + count - 1; //чтоб в нее зашло
@@ -732,7 +732,7 @@ namespace Galvanika
                                     for (int j = i; j <= item.Value; j++)
                                     {
                                         count++;
-                                        ProgramData valueNext = DataGridTable[j + 1] as ProgramData;
+                                        ProgramData valueNext = DataGridTable[j + 1];
                                         if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
                                         {
                                             i = i + count - 1; //чтоб в нее зашло
@@ -758,7 +758,7 @@ namespace Galvanika
                                 for (int j = i; j <= item.Value; j++)
                                 {
                                     count++;
-                                    ProgramData valueNext = DataGridTable[j + 1] as ProgramData;
+                                    ProgramData valueNext = DataGridTable[j + 1];
                                     if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
                                     {
                                         i = i + count - 1; //чтоб в нее зашло
@@ -824,7 +824,7 @@ namespace Galvanika
             }
             return false;
         }
-        private bool DataWrite(ProgramData value, string output)
+        private void DataWrite(ProgramData value, string output)
         {
             bool valueBool;
             try
@@ -875,7 +875,7 @@ namespace Galvanika
                     DB[olderByte.ToString()] = valueOlderByte;
                     var memory2 = MemoryGridTable.Find(u => u.Address == olderByte.ToString());
                     memory2.CurrentValue = valueOlderByte.ToLower();
-                    return true;
+                    return;
                 }
                 value.Output = Convert.ToInt32(valueBool).ToString();
                 var memory = MemoryGridTable.Find(u => u.Address == value.Bit);
@@ -892,11 +892,11 @@ namespace Galvanika
                     tempBits = ReverseString(tempBits);
                     memory.CurrentValue = Convert.ToByte(tempBits, 2).ToString();
                     DB[tempAddress[0]] = memory.CurrentValue;
-                    return true;
+                    return;
                 }
                 memory.CurrentValue = valueBool.ToString().ToLower();
                 DB[value.Bit] = memory.CurrentValue;
-                return true;
+                return;
             }
             var address = value.Bit.Split('.');
             int valueTemp;
@@ -939,7 +939,7 @@ namespace Galvanika
                     );
                     break;
             }
-            return true;
+            return;
         }
         private string ValueBool(ProgramData value)
         {
@@ -1070,7 +1070,7 @@ namespace Galvanika
                         break;
                 }
             }
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj as DependencyObject); i++)
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
                 SaveTextBoxes(VisualTreeHelper.GetChild(obj, i));
         }
         private void SaveToFile(string Stek, int newTime, KeyValuePair<string, string> DBAdress)
@@ -1140,12 +1140,12 @@ namespace Galvanika
                     if (DB["54.3"].ToLower() == "false")
                     {
                         DB["54.3"] = "true";
-                        button_Stop.BorderThickness = new Thickness(4);
+                        button_Stop.Foreground = Brushes.Red;
                     }
                     else
                     {
                         DB["54.3"] = "false";
-                        button_Stop.BorderThickness = new Thickness(0);
+                        button_Stop.Foreground = Brushes.Black;
                     }
                     break;
                 case 3:
@@ -1186,12 +1186,12 @@ namespace Galvanika
                     if (DB["54.3"].ToLower() == "false")
                     {
                         DB["54.3"] = "true";
-                        button_Stop.BorderThickness = new Thickness(4);
+                        button_Stop.Foreground = Brushes.Red;
                     }
                     else
                     {
                         DB["54.3"] = "false";
-                        button_Stop.BorderThickness = new Thickness(0);
+                        button_Stop.Foreground = Brushes.Black;
                     }
                     //                    button_Stop.Focus();
                     break;
