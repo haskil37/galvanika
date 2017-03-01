@@ -24,7 +24,7 @@ namespace Galvanika
             {
                 RshInitPort port = new RshInitPort();
                 port.operationType = RshInitPort.OperationTypeBit.Write;
-                port.portAddress = bpi.confs[0].address;
+                port.portAddress = bpi.confs[i].address;
                 port.portValue = 0x80;
                 st = device.Init(port); //У первой платы все на вывод
             }
@@ -53,7 +53,7 @@ namespace Galvanika
             {
                 RshInitPort port = new RshInitPort();
                 port.operationType = RshInitPort.OperationTypeBit.Write;
-                port.portAddress = bpi.confs[0].address;
+                port.portAddress = bpi.confs[i].address;
                 port.portValue = 0x9B;
                 st = device.Init(port); //У второй платы все на ввод
             }
