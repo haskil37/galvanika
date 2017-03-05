@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Galvanika"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" WindowState="Maximized" WindowStyle="None" FontSize="20" Background="Black" Foreground="Lime" Closing="Window_Closing" PreviewKeyDown="Window_PreviewKeyDown">
+        Title="MainWindow" Height="768" Width="1024" WindowState="Maximized" WindowStyle="None" FontSize="16" Background="Black" Foreground="Lime" Closing="Window_Closing" PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
         <Style TargetType="{x:Type CheckBox}">
             <Setter Property="SnapsToDevicePixels"
@@ -65,7 +65,7 @@
             </Setter>
         </Style>
         <Style TargetType="{x:Type Button}">
-            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>            
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -101,19 +101,19 @@
         <Label x:Name="currentTimeElapse" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime"/>
 
         <Button x:Name="button_Start" Margin="5" Grid.Row="2" Cursor="Hand" Click="button_Menu_Click" TabIndex="1" >
-            <TextBlock TextAlignment="Center" FontWeight="Bold">F1. Запуск линии<LineBreak/>с нулевого положения</TextBlock>
+            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F1. Запуск линии<LineBreak/>с нулевого положения</TextBlock>
         </Button>
         <Button x:Name="button_Stop" Grid.Row="2" Grid.Column="1" Margin="5" Cursor="Hand" TabIndex="2" Click="button_Menu_Click" >
-            <TextBlock TextAlignment="Center" FontWeight="Bold">F2. Стоп<LineBreak/>в исходном</TextBlock>
+            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F2. Стоп<LineBreak/>в исходном</TextBlock>
         </Button>
         <Button x:Name="button_Stekanie" Grid.Row="2" Grid.Column="2" Margin="5" Cursor="Hand" Click="button_Menu_Click" TabIndex="3" >
-            <TextBlock TextAlignment="Center" FontWeight="Bold">F3. Время стекания<LineBreak/>капель</TextBlock>
+            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F3. Время стекания<LineBreak/>капель</TextBlock>
         </Button>
         <Button x:Name="button_Info" Grid.Row="2" Grid.Column="3" Margin="5" Cursor="Hand" TabIndex="4" Click="button_Menu_Click" >
-            <TextBlock TextAlignment="Center" FontWeight="Bold">F4. Просмотр исходного<LineBreak/>положения</TextBlock>
+            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F4. Просмотр<LineBreak/>исходного положения</TextBlock>
         </Button>
         <Button x:Name="button_Service" Grid.Row="2" Grid.Column="4" Margin="5" Cursor="Hand" TabIndex="5" Click="button_Menu_Click" >
-            <TextBlock TextAlignment="Center" FontWeight="Bold">F5. Сервисный<LineBreak/>режим</TextBlock>
+            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F5. Сервисный<LineBreak/>режим</TextBlock>
         </Button>
         <TabControl x:Name="tabControl" Grid.Row="1" Grid.ColumnSpan="7" BorderThickness="0" SelectedIndex="2" Background="Black">
             <TabControl.ItemContainerStyle>
@@ -270,11 +270,11 @@
                         <TextBox x:Name="Stek_24_25" VerticalAlignment="Center" PreviewTextInput="PreviewTextInputHandler" DataObject.Pasting="PastingHandler" Width="100" />
                         <Label Content="сек." VerticalAlignment="Center" Foreground="Lime" />
                     </DockPanel>
-                    <Button x:Name="Save" Grid.Row="18" Content="Сохранить изменения" Click="Save_Click" Cursor="Hand" HorizontalAlignment="Center" MinWidth="300" FontWeight="Bold" />
+                    <Button x:Name="Save" Grid.Row="18" Content="Сохранить изменения" Click="Save_Click" Cursor="Hand" HorizontalAlignment="Center" MinWidth="300" FontWeight="Bold" FontSize="15"/>
                 </Grid>
             </TabItem>
             <TabItem>
-                <Label x:Name="e12" Foreground="Lime" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+
             </TabItem>
             <TabItem>
                 <Grid x:Name="testWindow" >
@@ -356,7 +356,7 @@
                             <CheckBox x:Name="Input1Bit5" Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Center" Content="5" IsHitTestVisible="False" Focusable="False" />
                             <CheckBox x:Name="Input1Bit6" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Content="6" IsHitTestVisible="False" Focusable="False" />
                             <CheckBox x:Name="Input1Bit7" Grid.Row="7" HorizontalAlignment="Right" VerticalAlignment="Center" Content="7" IsHitTestVisible="False" Focusable="False" />
-                            <Label Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Content="1 оператор ввеху" Foreground="Lime"/>
+                            <Label Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Content="1 оператор вверху" Foreground="Lime"/>
                             <Label Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Content="1 оператор внизу" Foreground="Lime"/>
                             <Label Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Content="1 опер. середина позиции" Foreground="Lime"/>
                             <Label Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Content="Замедление 2 оператор" Foreground="Lime"/>

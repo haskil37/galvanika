@@ -24,7 +24,7 @@ namespace Galvanika
         public List<MyTimers> TimerGridTable = new List<MyTimers>();
 
         public List<int> InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
-        public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public List<int> OutputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
 
         public Dictionary<string, string> DB = new Dictionary<string, string>();
@@ -39,6 +39,7 @@ namespace Galvanika
         public BackgroundWorker backgroundWorker = new BackgroundWorker();
 
         public Dictionary<string, int> Stek = new Dictionary<string, int>();
+        DispatcherTimer timerForInput = new DispatcherTimer();
 
         RSH rsh = new RSH();
         #endregion
@@ -330,9 +331,8 @@ namespace Galvanika
             timerForTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timerForTimer.Start();
 
-            DispatcherTimer timerForInput = new DispatcherTimer();
             timerForInput.Tick += new EventHandler(timer_Tick_Input);
-            timerForInput.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            timerForInput.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timerForInput.Start();
 
             DispatcherTimer timerForTimeRefresh = new DispatcherTimer();
@@ -349,6 +349,7 @@ namespace Galvanika
             {
                 string output = "";
                 string doubleBKT = ""; //переменная для двойной закрывающей скобки
+                string Load = ""; //переменная, когда загружен наймер, но для помещения в другое место
                 var compareValues = new List<int>();
                 for (int i = item.Key; i <= item.Value; i++)
                 {
@@ -371,6 +372,8 @@ namespace Galvanika
                     }
                     else //Cчитываем дальше
                     {
+                        if (i == 161)
+                        { }
                         string thisOperator = "";
                         if (value.Operator.Contains(")"))
                         {
@@ -545,19 +548,26 @@ namespace Galvanika
                                         }
                                     }
                                 }
+                                else
+                                    Load = timerData;
                             }
                             else if (compareValues.Count == 0) //Если сравнение
                             {
-                                var temp = output.Trim();
-                                temp = temp.Remove(temp.Length - 1, 1);
-                                temp = temp.Trim();
-                                if (!string.IsNullOrEmpty(temp))
+                                int loadInt;
+                                var result = Int32.TryParse(ValueBool(value), out loadInt);
+                                if (!result)
                                 {
-                                    temp = temp.Substring(0, temp.LastIndexOf(' '));
+                                    var temp = output.Trim();
+                                    temp = temp.Remove(temp.Length - 1, 1);
+                                    temp = temp.Trim();
+                                    if (!string.IsNullOrEmpty(temp))
+                                    {
+                                        temp = temp.Substring(0, temp.LastIndexOf(' '));
 
-                                    var tempValue = Parse(temp);
-                                    if (tempValue == false)
-                                        i = i + 2;
+                                        var tempValue = Parse(temp);
+                                        if (tempValue == false)
+                                            i = i + 2;
+                                    }
                                 }
                             }
                             var currentInt = ValueBool(value);
@@ -605,7 +615,10 @@ namespace Galvanika
                         }
                         if (value.Operator.Contains("T"))
                         {
-                            DB[value.Bit] = compareValues[0].ToString();
+                            if (string.IsNullOrEmpty(Load))
+                                DB[value.Bit] = compareValues[0].ToString();
+                            else
+                                DB[value.Bit] = Load;
                         }
 
                         if (value.Operator.Contains("SPBNB")) //Типа goto
@@ -618,23 +631,25 @@ namespace Galvanika
 
                             if (tempValue) //если перед нами 1 то идем сюда
                             {
-                                ProgramData valueNext = DataGridTable[i + 1];
-                                var valueToNext = ValueBool(valueNext);
-                                ProgramData valueNext2 = DataGridTable[i + 2];
-                                var memory = MemoryGridTable.Find(u => u.Address == valueNext2.Bit);
-                                memory.CurrentValue = valueToNext.ToUpper();
-                                DB[valueNext2.Bit] = memory.CurrentValue;
+                                //ProgramData valueNext = DataGridTable[i + 1];
+                                //var valueToNext = ValueBool(valueNext);
+                                //ProgramData valueNext2 = DataGridTable[i + 2];
+                                //var memory = MemoryGridTable.Find(u => u.Address == valueNext2.Bit);
+                                //memory.CurrentValue = valueToNext.ToUpper();
+                                //DB[valueNext2.Bit] = memory.CurrentValue;
                             }
-                            //если нет, то перескакиваем. считаем сколько перескачить
-                            int count = 0;
-                            for (int j = i; j <= item.Value; j++)
-                            {
-                                count++;
-                                ProgramData valueNext = DataGridTable[j + 1];
-                                if (valueNext.Operator == value.AEM + ":")
+                            else
+                            {//если нет, то перескакиваем. считаем сколько перескачить
+                                int count = 0;
+                                for (int j = i; j <= item.Value; j++)
                                 {
-                                    i = i + count;
-                                    break;
+                                    count++;
+                                    ProgramData valueNext = DataGridTable[j + 1];
+                                    if (valueNext.Operator == value.AEM + ":")
+                                    {
+                                        i = i + count;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -776,7 +791,9 @@ namespace Galvanika
                                             if (!value.Operator.Contains("<>"))
                                                 if (!value.Operator.Contains("<"))
                                                     if (!value.Operator.Contains(">"))
-                                                        output += ValueBool(value);
+                                                        if (!value.Operator.Contains("+"))
+                                                            if (!value.Operator.Contains("-"))
+                                                                output += ValueBool(value);
                         }
                     }
                 }
@@ -1268,7 +1285,7 @@ namespace Galvanika
         #region Обновление данных в сервисном режиме и на плате, считываение с платы
         private void ServiceOutput()
         {
-            //rsh.Write(OutputData); //Обновляем данные платы
+            rsh.Write(OutputData); //Обновляем данные платы
 
             for (int i = 0; i < 3; i++)
             {
@@ -1292,6 +1309,8 @@ namespace Galvanika
         private void timer_Tick_Input(object sender, EventArgs e)
         {
             //InputData = rsh.Read(); //Считываем с платы и обновляем InputData
+            //if (InputData == null)
+            //    InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
 
             for (int i = 0; i < 4; i++)
             {
@@ -1375,9 +1394,9 @@ namespace Galvanika
         private void ResetAll()
         {
             InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
-            MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             OutputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
-            //CБрасываем еще выхода на плате в 0.
+            rsh.Write(OutputData);
         }
         #endregion
     }

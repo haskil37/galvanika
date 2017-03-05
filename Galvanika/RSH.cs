@@ -61,7 +61,7 @@ namespace Galvanika
         }
         public List<int> Read()
         {
-            st = device.Connect(1); //СМЕНИТЬ КОННЕКТ НА 2
+            st = device.Connect(2); 
             List<int> InputData = new List<int>();
             RshInitPort p = new RshInitPort();
             p.operationType = RshInitPort.OperationTypeBit.Read;
@@ -71,7 +71,6 @@ namespace Galvanika
                 st = device.Init(p);
                 if (st != RSH_API.SUCCESS)
                     return null;
-
                 var bits = Convert.ToString(p.portValue, 2);
                 while (bits.Length < 8)
                     bits = bits.Insert(0, "0");
@@ -117,7 +116,6 @@ namespace Galvanika
         private string InverseString(string s)
         {
             char[] value = s.ToCharArray();
-            Array.Reverse(value);
             string inverseValue = "";
             foreach (var item in value)
             {
