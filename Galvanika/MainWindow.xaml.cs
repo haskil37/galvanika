@@ -1308,9 +1308,9 @@ namespace Galvanika
         }
         private void timer_Tick_Input(object sender, EventArgs e)
         {
-            //InputData = rsh.Read(); //Считываем с платы и обновляем InputData
-            //if (InputData == null)
-            //    InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+            InputData = rsh.Read(); //Считываем с платы и обновляем InputData
+            if (InputData == null)
+                InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
 
             for (int i = 0; i < 4; i++)
             {
