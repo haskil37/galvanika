@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Galvanika"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1024" WindowState="Maximized" WindowStyle="None" FontSize="16" Background="Black" Foreground="Lime" Closing="Window_Closing" PreviewKeyDown="Window_PreviewKeyDown">
+        Title="Blasberg" Height="768" Width="1024" WindowState="Maximized" WindowStyle="None" FontSize="16" Background="Black" Foreground="Lime" Closing="Window_Closing" PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
         <Style TargetType="{x:Type CheckBox}">
             <Setter Property="SnapsToDevicePixels"
@@ -99,6 +99,8 @@
 
         <Label x:Name="currentTime" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Lime"/>
         <Label x:Name="currentTimeElapse" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime"/>
+
+        <Label x:Name="ErrorString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red" Content=" "/>
 
         <Button x:Name="button_Start" Margin="5" Grid.Row="2" Cursor="Hand" Click="button_Menu_Click" TabIndex="1" >
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F1. Запуск линии<LineBreak/>с нулевого положения</TextBlock>

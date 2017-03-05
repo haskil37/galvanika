@@ -70,7 +70,8 @@ namespace Galvanika
                 p.portAddress = i;
                 st = device.Init(p);
                 if (st != RSH_API.SUCCESS)
-                    return null;
+                    return new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+
                 var bits = Convert.ToString(p.portValue, 2);
                 while (bits.Length < 8)
                     bits = bits.Insert(0, "0");
@@ -82,7 +83,7 @@ namespace Galvanika
             p.portAddress = 4;
             st = device.Init(p);
             if (st != RSH_API.SUCCESS)
-                return null;
+                return new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
 
             var bits2 = Convert.ToString(p.portValue, 2);
             while (bits2.Length < 8)

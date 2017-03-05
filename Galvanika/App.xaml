@@ -4,6 +4,23 @@
              xmlns:local="clr-namespace:Galvanika"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="MessageBox" TargetType="{x:Type Window}">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="ResizeMode" Value="NoResize" />
+            <Setter Property="WindowStyle" Value="None" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <Border BorderThickness="2" Background="Black" BorderBrush="Red">
+                            <Grid>
+                                <AdornerDecorator>
+                                    <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Margin}" />
+                                </AdornerDecorator>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

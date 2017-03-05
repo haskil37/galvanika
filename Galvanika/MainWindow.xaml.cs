@@ -23,6 +23,7 @@ namespace Galvanika
         public List<ProgramData> DataGridTable = new List<ProgramData>();
         public List<MyTimers> TimerGridTable = new List<MyTimers>();
 
+        //125,126,93,1 - Исходное положение новое, 125,126,173,2 - старое.
         public List<int> InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
         public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public List<int> OutputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -1147,7 +1148,7 @@ namespace Galvanika
                     else
                     {
                         if (DB["0.3"].ToLower() == "true")
-                            MessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
+                            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
                         else
                             ResetAll();
                     }
@@ -1192,7 +1193,7 @@ namespace Galvanika
                     else
                     {
                         if (DB["0.3"].ToLower() == "true")
-                            MessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
+                            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
                         else
                             ResetAll();
                     }
@@ -1285,7 +1286,15 @@ namespace Galvanika
         #region Обновление данных в сервисном режиме и на плате, считываение с платы
         private void ServiceOutput()
         {
-            rsh.Write(OutputData); //Обновляем данные платы
+            var result = rsh.Write(OutputData); //Обновляем данные платы
+            var errorString = ErrorString.Content.ToString();
+            if (!result && string.IsNullOrEmpty(errorString.Trim()))
+            {
+                ErrorString.Content = "Не удалось отправить выходные данные на плату";
+                CustomMessageBox.Show(ErrorString.Content.ToString());
+            }
+            else if(result)
+                ErrorString.Content = " ";
 
             for (int i = 0; i < 3; i++)
             {
@@ -1309,8 +1318,6 @@ namespace Galvanika
         private void timer_Tick_Input(object sender, EventArgs e)
         {
             InputData = rsh.Read(); //Считываем с платы и обновляем InputData
-            if (InputData == null)
-                InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
 
             for (int i = 0; i < 4; i++)
             {
