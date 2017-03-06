@@ -97,14 +97,51 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+
+        <Grid x:Name="Service" Width="300" Height="300" Grid.RowSpan="3" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="3" Visibility="Hidden" Background="Black">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Rectangle Stroke="Red" StrokeThickness="2" Grid.RowSpan="6"/>
+            <DockPanel LastChildFill="true" Grid.Row="0" HorizontalAlignment="Center">
+                <Label Content="Вход 0" VerticalAlignment="Center" Foreground="Lime" />
+                <TextBox x:Name="MyInput0" VerticalAlignment="Center" Margin="20,0,0,0"  Width="100"/>
+            </DockPanel>
+            <DockPanel LastChildFill="true" Grid.Row="1" HorizontalAlignment="Center">
+                <Label Content="Вход 1" VerticalAlignment="Center" Foreground="Lime" />
+                <TextBox x:Name="MyInput1" VerticalAlignment="Center" Margin="20,0,0,0"  Width="100"/>
+            </DockPanel>
+            <DockPanel LastChildFill="true" Grid.Row="2" HorizontalAlignment="Center">
+                <Label Content="Вход 2" VerticalAlignment="Center" Foreground="Lime" />
+                <TextBox x:Name="MyInput2" VerticalAlignment="Center" Margin="20,0,0,0"  Width="100"/>
+            </DockPanel>
+            <DockPanel LastChildFill="true" Grid.Row="3" HorizontalAlignment="Center">
+                <Label Content="Вход 3" VerticalAlignment="Center" Foreground="Lime" />
+                <TextBox x:Name="MyInput3" VerticalAlignment="Center" Margin="20,0,0,0"  Width="100"/>
+            </DockPanel>
+            <Button Grid.Row="5" Click="Test_Click" Cursor="Hand" Margin="10">Применить</Button>
+        </Grid>
+
+
+
+
+
+
+
+
+
         <Label x:Name="currentTime" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Lime"/>
         <Label x:Name="currentTimeElapse" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime"/>
 
         <Label x:Name="ErrorString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red" Content=" "/>
 
-        <Button x:Name="button_Start" Margin="5" Grid.Row="2" Cursor="Hand" Click="button_Menu_Click" TabIndex="1" >
+        <!--<Button x:Name="button_Start" Margin="5" Grid.Row="2" Cursor="Hand" Click="button_Menu_Click" TabIndex="1" >
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F1. Запуск линии<LineBreak/>с нулевого положения</TextBlock>
-        </Button>
+        </Button>-->
         <Button x:Name="button_Stop" Grid.Row="2" Grid.Column="1" Margin="5" Cursor="Hand" TabIndex="2" Click="button_Menu_Click" >
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F2. Стоп<LineBreak/>в исходном</TextBlock>
         </Button>
@@ -112,12 +149,12 @@
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F3. Время стекания<LineBreak/>капель</TextBlock>
         </Button>
         <Button x:Name="button_Info" Grid.Row="2" Grid.Column="3" Margin="5" Cursor="Hand" TabIndex="4" Click="button_Menu_Click" >
-            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F4. Просмотр<LineBreak/>исходного положения</TextBlock>
+            <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F4. Выбор<LineBreak/>программы</TextBlock>
         </Button>
         <Button x:Name="button_Service" Grid.Row="2" Grid.Column="4" Margin="5" Cursor="Hand" TabIndex="5" Click="button_Menu_Click" >
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F5. Сервисный<LineBreak/>режим</TextBlock>
         </Button>
-        <TabControl x:Name="tabControl" Grid.Row="1" Grid.ColumnSpan="7" BorderThickness="0" SelectedIndex="2" Background="Black">
+        <TabControl x:Name="tabControl" Grid.Row="1" Grid.ColumnSpan="7" BorderThickness="0" SelectedIndex="0" Background="Black">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
                     <Setter Property="Visibility" Value="Hidden" />

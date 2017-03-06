@@ -287,11 +287,18 @@ namespace Galvanika
         }
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Calculate();
+            if (backgroundWorker.CancellationPending)
+            {
+                e.Cancel = true;
+                return;
+            }
+            else
+                Calculate();
         }
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            backgroundWorker.RunWorkerAsync();
+            if (!e.Cancelled)
+                backgroundWorker.RunWorkerAsync();
         }
         int time = -1;
         private void timeRefresh(object sender, EventArgs e)
@@ -362,6 +369,9 @@ namespace Galvanika
 
                 if (DB["0.2"].ToLower() == "true")
                     deyOp1.Content = "Исходное";
+                else
+                    deyOp1.Content = "";
+
                 if (DB["0.5"].ToLower() == "true")
                 {
                     deyOp1.Foreground = new SolidColorBrush(Colors.Red);
@@ -387,6 +397,8 @@ namespace Galvanika
 
                 if (DB["0.1"].ToLower() == "true")
                     deyOp2.Content = "Исходное";
+                else
+                    deyOp2.Content = "";
                 if (DB["0.6"].ToLower() == "true")
                 {
                     deyOp2.Foreground = new SolidColorBrush(Colors.Red);
@@ -420,7 +432,7 @@ namespace Galvanika
         {
             InitializeComponent();
             AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
-            button_Start.Focus();
+            //button_Start.Focus();
             var openFile = ReadFileDB();
             if (!openFile)
                 return;
@@ -452,6 +464,8 @@ namespace Galvanika
             timerForVisualDataRefresh.Start();
 
             var result = rsh.Connect();
+            ResetAll(); //Возможно избыточно
+            backgroundWorker.RunWorkerAsync();
         }
         #region Расчет
         private void Calculate()
@@ -1269,21 +1283,24 @@ namespace Galvanika
         {
             switch (((Button)sender).TabIndex)
             {
-                case 1:
-                    if (!backgroundWorker.IsBusy)
-                    {
-                        ResetAll(); //Возможно избыточно
-                        backgroundWorker.RunWorkerAsync();
-                    }
-                    else
-                    {
-                        if (DB["0.3"].ToLower() == "true")
-                            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
-                        else
-                            ResetAll();
-                    }
-                    tabControl.SelectedIndex = 0;
-                    break;
+                //case 1:
+                //    if (!backgroundWorker.IsBusy)
+                //    {
+                //        ResetAll(); //Возможно избыточно
+                //        backgroundWorker.RunWorkerAsync();
+                //    }
+                //    else
+                //    {
+                //        if (DB["0.3"].ToLower() == "true")
+                //            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
+                //        else
+                //        {
+                //            //backgroundWorker.CancelAsync();
+                //            ResetAll();
+                //        }
+                //    }
+                //    tabControl.SelectedIndex = 0;
+                //    break;
                 case 2:
                     if (DB["54.3"].ToLower() == "false")
                     {
@@ -1297,14 +1314,21 @@ namespace Galvanika
                     }
                     break;
                 case 3:
-                    tabControl.SelectedIndex = 1;
+                    if (tabControl.SelectedIndex != 1)
+                        tabControl.SelectedIndex = 1;
+                    else
+                        tabControl.SelectedIndex = 0;
+                    button_Stekanie.Focus();
                     break;
                 case 4:
-                    //InputData[0] = 127;
-                    tabControl.SelectedIndex = 2;
+                    button_Info.Focus();
                     break;
                 case 5:
-                    tabControl.SelectedIndex = 3;
+                    if (tabControl.SelectedIndex != 3)
+                        tabControl.SelectedIndex = 3;
+                    else
+                        tabControl.SelectedIndex = 0;
+                    button_Service.Focus();
                     break;
                 default:
                     break;
@@ -1314,22 +1338,25 @@ namespace Galvanika
         {
             switch (e.Key)
             {
-                case Key.F1:
-                    if (!backgroundWorker.IsBusy)
-                    {
-                        ResetAll(); //Возможно избыточно
-                        backgroundWorker.RunWorkerAsync();
-                    }
-                    else
-                    {
-                        if (DB["0.3"].ToLower() == "true")
-                            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
-                        else
-                            ResetAll();
-                    }
-                    tabControl.SelectedIndex = 0;
-                    button_Start.Focus();
-                    break;
+                //case Key.F1:
+                //    if (!backgroundWorker.IsBusy)
+                //    {
+                //        ResetAll(); //Возможно избыточно
+                //        backgroundWorker.RunWorkerAsync();
+                //    }
+                //    else
+                //    {
+                //        if (DB["0.3"].ToLower() == "true")
+                //            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
+                //        else
+                //        {
+                //            //backgroundWorker.CancelAsync();
+                //            ResetAll();
+                //        }
+                //    }
+                //    tabControl.SelectedIndex = 0;
+                //    button_Start.Focus();
+                //    break;
                 case Key.F2:
                     if (DB["54.3"].ToLower() == "false")
                     {
@@ -1344,16 +1371,24 @@ namespace Galvanika
                     //                    button_Stop.Focus();
                     break;
                 case Key.F3:
-                    tabControl.SelectedIndex = 1;
+                    if (tabControl.SelectedIndex != 1)
+                        tabControl.SelectedIndex = 1;
+                    else
+                        tabControl.SelectedIndex = 0;
                     button_Stekanie.Focus();
                     break;
                 case Key.F4:
-                    //InputData[0] = 127;
                     button_Info.Focus();
                     break;
                 case Key.F5:
-                    tabControl.SelectedIndex = 3;
+                    if(tabControl.SelectedIndex != 3)
+                        tabControl.SelectedIndex = 3;
+                    else
+                        tabControl.SelectedIndex = 0;
                     button_Service.Focus();
+                    break;
+                case Key.F6:
+                    StartTest();
                     break;
                 default:
                     break;
@@ -1428,7 +1463,7 @@ namespace Galvanika
         }
         private void timer_Tick_Input(object sender, EventArgs e)
         {
-            InputData = rsh.Read(); //Считываем с платы и обновляем InputData
+            //InputData = rsh.Read(); //Считываем с платы и обновляем InputData
         }
         private void ResetAll()
         {
@@ -1436,6 +1471,29 @@ namespace Galvanika
             MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             OutputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
             rsh.Write(OutputData);
+        }
+        #endregion
+        #region Тестирование
+        private void StartTest()
+        {
+            Service.Visibility = Visibility.Visible;
+            MyInput0.Text = InputData[0].ToString();
+            MyInput1.Text = InputData[1].ToString();
+            MyInput2.Text = InputData[2].ToString();
+            MyInput3.Text = InputData[3].ToString();
+        }
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+            Service.Visibility = Visibility.Hidden;
+            if (!string.IsNullOrEmpty(MyInput0.Text))
+                InputData[0] = Convert.ToInt32(MyInput0.Text);
+            if (!string.IsNullOrEmpty(MyInput1.Text))
+                InputData[1] = Convert.ToInt32(MyInput1.Text);
+            if (!string.IsNullOrEmpty(MyInput2.Text))
+                InputData[2] = Convert.ToInt32(MyInput2.Text);
+            if (!string.IsNullOrEmpty(MyInput3.Text))
+                InputData[3] = Convert.ToInt32(MyInput3.Text);
+
         }
         #endregion
     }
