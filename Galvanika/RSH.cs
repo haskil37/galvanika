@@ -11,6 +11,10 @@ namespace Galvanika
         RSH_API st;
         Device device = new Device(BOARD_NAME);
         RshBoardPortInfo bpi = new RshBoardPortInfo();
+
+        List<int> InputTempValue = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+        List<int> InputTempValueSave = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+
         public bool Connect()
         {
             st = device.OperationStatus;
@@ -61,7 +65,7 @@ namespace Galvanika
         }
         public List<int> Read()
         {
-            st = device.Connect(2); 
+            st = device.Connect(2);
             List<int> InputData = new List<int>();
             RshInitPort p = new RshInitPort();
             p.operationType = RshInitPort.OperationTypeBit.Read;
@@ -92,7 +96,13 @@ namespace Galvanika
             var byteToSave2 = Convert.ToByte(bits2, 2);
             InputData.Add(byteToSave2);
 
-            return InputData;
+            if (InputTempValue != InputData)
+                InputTempValue = InputData;
+
+            if (InputTempValue == InputData)
+                InputTempValueSave = InputData;
+
+            return InputTempValueSave;
         }
         public bool Write(List<int> outputData)
         {
