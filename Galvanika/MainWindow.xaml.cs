@@ -1463,7 +1463,7 @@ namespace Galvanika
         }
         private void timer_Tick_Input(object sender, EventArgs e)
         {
-            //InputData = rsh.Read(); //Считываем с платы и обновляем InputData
+            InputData = rsh.Read(); //Считываем с платы и обновляем InputData
         }
         private void ResetAll()
         {
