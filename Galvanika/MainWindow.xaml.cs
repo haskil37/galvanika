@@ -24,7 +24,7 @@ namespace Galvanika
         public List<MyTimers> TimerGridTable = new List<MyTimers>();
 
         //124,126,93,1 - Исходное положение новое, 125,126,173,2 - старое.
-        public List<int> InputData = new List<int>() { 0, 0, 0, 0 };
+        public List<int> InputData = new List<int>() { 124, 126, 93, 1 };
         public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public List<int> OutputData = new List<int>() { 0, 0, 0 };
 
@@ -421,6 +421,11 @@ namespace Galvanika
                 }
                 if (DB["54.4"].ToLower() == "true")
                     deyOp2.Content = "Ожидание загрузки";
+
+                if (DB["54.6"].ToLower() == "true")
+                    deyOp1.Content = "Выдержка";
+                if (DB["54.7"].ToLower() == "true")
+                    deyOp2.Content = "Выдержка";
             }
             catch
             {
@@ -497,8 +502,9 @@ namespace Galvanika
                     }
                     else //Cчитываем дальше
                     {
-                        if (i == 161)
-                        { }
+                        //if (value.Bit.Contains("0.2") && InputData[0] == 122 && i==169)
+                        //{
+                        //}
                         string thisOperator = "";
                         if (value.Operator.Contains(")"))
                         {
@@ -816,6 +822,12 @@ namespace Galvanika
                         }
                         else if (value.Operator.Contains("FP"))
                         {
+                            if (value.Bit.Contains("9.6") && InputData[0] == 122)
+                            {
+                                if (TimerGridTable[0].Time == 400)
+                                { }
+                            }
+
                             var tempValue = Parse(output);
                             if (Convert.ToInt32(tempValue) != FrontP[value.Key.ToString()])
                             {
@@ -829,28 +841,28 @@ namespace Galvanika
                                     //DataWrite(value, "false");
                                     if (FrontP[value.Key.ToString()] == 1)
                                         FrontP[value.Key.ToString()] = 0;
-                                    output = "";
-                                    //int count = 0;
-                                    //for (int j = i; j <= item.Value; j++)
-                                    //{
-                                    //    ProgramData valueNext = DataGridTable[j + 1];
-                                    //    if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
-                                    //    {
-                                    //        //if (count == 0) //Это если надо пропустить след. строку, но она S или R
-                                    //        //{
-                                    //        //    count++;
-                                    //        //    break;
-                                    //        //}
-                                    //        i = i + count; //чтоб в нее зашло
-                                    //        break;
-                                    //    }
-                                    //    count++;
-                                    //}
+                                    output = "false";
+                                    int count = 0;
+                                    for (int j = i; j <= item.Value; j++)
+                                    {
+                                        ProgramData valueNext = DataGridTable[j + 1];
+                                        if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
+                                        {
+                                            //if (count == 0) //Это если надо пропустить след. строку, но она S или R
+                                            {
+                                                count++;
+                                                break;
+                                            }
+                                            i = i + count; //чтоб в нее зашло
+                                            break;
+                                        }
+                                        count++;
+                                    }
                                 }
                             }
                             else
                             {      //Перескакиваем фронт
-                                output = "";
+                                output = "false";
                                 int count = 0;
                                 for (int j = i; j <= item.Value; j++)
                                 {
@@ -871,13 +883,20 @@ namespace Galvanika
                         }
                         else if (value.Operator.Contains("FN"))
                         {
+                            if (value.Bit.Contains("9.7") && InputData[0] == 122)
+                            {
+                                if(TimerGridTable[0].Time==400)
+                                { }
+                            }
                             var tempValue = Parse(output);
                             if (Convert.ToInt32(tempValue) != FrontN[value.Key.ToString()])
                             {
+
+
                                 if (Convert.ToInt32(tempValue) == 1)
                                 {
                                     FrontN[value.Key.ToString()] = 1;
-                                    output = "";
+                                    output = "false";
                                     int count = 0;
                                     for (int j = i; j <= item.Value; j++)
                                     {
@@ -889,7 +908,7 @@ namespace Galvanika
                                                 i = i + 1;
                                                 break;
                                             }
-                                            i = i + count - 1; //чтоб в нее зашло
+                                            i = i + count; //чтоб в нее зашло
                                             break;
                                         }
                                         count++;
@@ -908,7 +927,7 @@ namespace Galvanika
                             else
                             //Перескакиваем в конец фронта
                             {
-                                output = "";
+                                output = "false";
                                 int count = 0;
                                 for (int j = i; j <= item.Value; j++)
                                 {
@@ -932,13 +951,14 @@ namespace Galvanika
                             if (!thisOperator.Contains("("))
                                 if (!value.Operator.Contains(")"))
                                     if (!value.Operator.Contains("L"))
-                                        if (!value.Operator.Contains("="))
-                                            if (!value.Operator.Contains("<>"))
-                                                if (!value.Operator.Contains("<"))
-                                                    if (!value.Operator.Contains(">"))
-                                                        if (!value.Operator.Contains("+"))
-                                                            if (!value.Operator.Contains("-"))
-                                                                output += ValueBool(value);
+                                        if (!value.Operator.Contains("T"))
+                                            if (!value.Operator.Contains("="))
+                                                if (!value.Operator.Contains("<>"))
+                                                    if (!value.Operator.Contains("<"))
+                                                        if (!value.Operator.Contains(">"))
+                                                            if (!value.Operator.Contains("+"))
+                                                                if (!value.Operator.Contains("-"))
+                                                                    output += ValueBool(value);
                         }
                     }
                 }
@@ -1463,11 +1483,11 @@ namespace Galvanika
         }
         private void timer_Tick_Input(object sender, EventArgs e)
         {
-            InputData = rsh.Read(); //Считываем с платы и обновляем InputData
+            //InputData = rsh.Read(); //Считываем с платы и обновляем InputData
         }
         private void ResetAll()
         {
-            InputData = new List<int>() { 0, 0, 0, 0 };
+            InputData = new List<int>() { 124, 126, 93, 1 };
             MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             OutputData = new List<int>() { 0, 0, 0 };
             rsh.Write(OutputData);
