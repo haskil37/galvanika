@@ -24,9 +24,9 @@ namespace Galvanika
         public List<MyTimers> TimerGridTable = new List<MyTimers>();
 
         //124,126,93,1 - Исходное положение новое, 125,126,173,2 - старое.
-        public List<int> InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+        public List<int> InputData = new List<int>() { 0, 0, 0, 0 };
         public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public List<int> OutputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+        public List<int> OutputData = new List<int>() { 0, 0, 0 };
 
         public Dictionary<string, string> DB = new Dictionary<string, string>();
         public Dictionary<int, int> StartEnd = new Dictionary<int, int>();
@@ -1467,9 +1467,9 @@ namespace Galvanika
         }
         private void ResetAll()
         {
-            InputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+            InputData = new List<int>() { 0, 0, 0, 0 };
             MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            OutputData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+            OutputData = new List<int>() { 0, 0, 0 };
             rsh.Write(OutputData);
         }
         #endregion

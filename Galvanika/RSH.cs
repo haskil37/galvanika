@@ -2,6 +2,7 @@
 using RshCSharpWrapper;
 using RshCSharpWrapper.RshDevice;
 using System;
+using System.Linq;
 
 namespace Galvanika
 {
@@ -12,9 +13,8 @@ namespace Galvanika
         Device device = new Device(BOARD_NAME);
         RshBoardPortInfo bpi = new RshBoardPortInfo();
 
-        List<int> InputTempValue = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
-        List<int> InputTempValueSave = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
-
+        List<int> InputTempValue = new List<int>() { 0, 0, 0, 0 };
+        List<int> InputTempValueSave = new List<int>() { 0, 0, 0, 0 };
         public bool Connect()
         {
             st = device.OperationStatus;
@@ -74,7 +74,7 @@ namespace Galvanika
                 p.portAddress = i;
                 st = device.Init(p);
                 if (st != RSH_API.SUCCESS)
-                    return new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+                    return new List<int>() { 0, 0, 0, 0 };
 
                 var bits = Convert.ToString(p.portValue, 2);
                 while (bits.Length < 8)
@@ -87,7 +87,7 @@ namespace Galvanika
             p.portAddress = 4;
             st = device.Init(p);
             if (st != RSH_API.SUCCESS)
-                return new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0 };
+                return new List<int>() { 0, 0, 0, 0 };
 
             var bits2 = Convert.ToString(p.portValue, 2);
             while (bits2.Length < 8)
@@ -96,11 +96,11 @@ namespace Galvanika
             var byteToSave2 = Convert.ToByte(bits2, 2);
             InputData.Add(byteToSave2);
 
-            if (InputTempValue != InputData)
-                InputTempValue = InputData;
-
-            if (InputTempValue == InputData)
+            if (InputTempValue.SequenceEqual(InputData))
                 InputTempValueSave = InputData;
+
+            if (!InputTempValue.SequenceEqual(InputData))
+                InputTempValue = InputData;
 
             return InputTempValueSave;
         }
