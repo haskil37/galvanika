@@ -24,8 +24,9 @@ namespace Galvanika
         public List<MyTimers> TimerGridTable = new List<MyTimers>();
 
         //124,126,93,1 - Исходное положение новое, 125,126,173,2 - старое.
-        public List<int> InputData = new List<int>() { 0, 0, 0, 0 };
-        public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        public List<int> InputData = new List<int>() { 0, 0, 0, 1 };
+        //public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        public List<int> MarkerData = Enumerable.Repeat(0, 20).ToList();
         public List<int> OutputData = new List<int>() { 0, 0, 0 };
 
         public Dictionary<string, string> DB = new Dictionary<string, string>();
@@ -210,13 +211,18 @@ namespace Galvanika
                             var result = new ProgramData(countKey, item, stringData[0], stringData[1], stringData[2], "", "", "");
                             DataGridTable.Add(result);
                             if (stringData.Contains("FP"))
-                                FrontP.Add(countKey.ToString(), 0);
+                                FrontP.Add(countKey.ToString(), 1);
                             if (stringData.Contains("FN"))
                                 FrontN.Add(countKey.ToString(), 0);
                         }
                         else if (stringData.Count == 2)
                         {
                             if (stringData.Contains("SPBNB"))
+                            {
+                                var result = new ProgramData(countKey, item, stringData[0], stringData[1], "", "", "", "");
+                                DataGridTable.Add(result);
+                            }
+                            else if (stringData.Contains("BLD"))
                             {
                                 var result = new ProgramData(countKey, item, stringData[0], stringData[1], "", "", "", "");
                                 DataGridTable.Add(result);
@@ -455,7 +461,7 @@ namespace Galvanika
 
             DispatcherTimer timerForInput = new DispatcherTimer();
             timerForInput.Tick += new EventHandler(timer_Tick_Input);
-            timerForInput.Interval = new TimeSpan(0, 0, 0, 0, 30);
+            timerForInput.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timerForInput.Start();
 
             DispatcherTimer timerForTimeRefresh = new DispatcherTimer();
@@ -465,7 +471,7 @@ namespace Galvanika
 
             DispatcherTimer timerForVisualDataRefresh = new DispatcherTimer();
             timerForVisualDataRefresh.Tick += new EventHandler(timerForVisualDataRefresh_Tick);
-            timerForVisualDataRefresh.Interval = new TimeSpan(0, 0, 0, 0, 30);
+            timerForVisualDataRefresh.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timerForVisualDataRefresh.Start();
 
             var result = rsh.Connect();
@@ -480,6 +486,9 @@ namespace Galvanika
                 string output = "";
                 string doubleBKT = ""; //переменная для двойной закрывающей скобки
                 string Load = ""; //переменная, когда загружен наймер, но для помещения в другое место
+
+                string BLD = ""; //Для фронта BLD
+
                 var compareValues = new List<int>();
                 for (int i = item.Key; i <= item.Value; i++)
                 {
@@ -554,7 +563,7 @@ namespace Galvanika
                                 output += " ( ";
                         }
 
-                        if (value.Operator.Contains("L"))
+                        if (value.Operator.Contains("L") && !value.Operator.Contains("BLD"))
                         {
                             var timerData = ValueBool(value);
                             var timerFromDB = 0;
@@ -749,6 +758,32 @@ namespace Galvanika
                                 DB[value.Bit] = Load;
                         }
 
+
+
+                        if (value.Operator.Contains("BLD")) 
+                        {
+                            if (string.IsNullOrEmpty(output))
+                                break;
+                            string tempOutput = output;
+                            if (output.Contains("("))
+                                tempOutput = output.Remove(output.LastIndexOf('('));
+
+                            var tempOutputForParse = tempOutput.TrimEnd();
+                            if (tempOutputForParse.LastIndexOf(' ') != -1)
+                            {
+                                tempOutputForParse = tempOutputForParse.Substring(0, tempOutputForParse.LastIndexOf(' '));
+                                if (!Parse(tempOutputForParse))
+                                    break;
+                            }
+                            if (output.Replace(tempOutput, "").Length != 0)
+                            {
+                                BLD = output.Replace(tempOutput, "");
+                                BLD = BLD.Remove(0, 1).Trim();
+                            }
+                            else
+                                BLD = output;
+                        }
+
                         if (value.Operator.Contains("SPBNB")) //Типа goto
                         {
                             bool tempValue;
@@ -819,73 +854,42 @@ namespace Galvanika
                         }
                         else if (value.Operator.Contains("FP"))
                         {
-                            if (value.Bit.Contains("9.6") && InputData[0] == 122)
+                            if (string.IsNullOrEmpty(BLD)) //Если нет BLD
                             {
-                                if (TimerGridTable[0].Time == 400)
-                                { }
-                            }
-
-                            var tempValue = Parse(output);
-                            if (Convert.ToInt32(tempValue) != FrontP[value.Key.ToString()])
-                            {
-                                if (FrontP[value.Key.ToString()] == 0)
+                                var tempValue = Parse(output);
+                                if (Convert.ToInt32(tempValue) != FrontP[value.Key.ToString()])
                                 {
-                                    FrontP[value.Key.ToString()] = 1;
-                                    DataWrite(value, "true");
-                                }
-                                else
-                                {
-                                    //DataWrite(value, "false");
-                                    if (FrontP[value.Key.ToString()] == 1)
-                                        FrontP[value.Key.ToString()] = 0;
-                                    output = "false";
-                                    int count = 0;
-                                    for (int j = i; j <= item.Value; j++)
+                                    if (FrontP[value.Key.ToString()] == 0)
                                     {
-                                        ProgramData valueNext = DataGridTable[j + 1];
-                                        if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
+                                        FrontP[value.Key.ToString()] = 1;
+                                        DataWrite(value, "true");
+                                    }
+                                    else
+                                    {
+                                        //DataWrite(value, "false");
+                                        if (FrontP[value.Key.ToString()] == 1)
+                                            FrontP[value.Key.ToString()] = 0;
+                                        output = "false";
+                                        int count = 0;
+                                        for (int j = i; j <= item.Value; j++)
                                         {
-                                            if (count == 0) //Это если надо пропустить след. строку, но она S или R
+                                            ProgramData valueNext = DataGridTable[j + 1];
+                                            if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
                                             {
-                                                count++;
+                                                if (count == 0) //Это если надо пропустить след. строку, но она S или R
+                                                {
+                                                    count++;
+                                                    break;
+                                                }
+                                                i = i + count; //чтоб в нее зашло
                                                 break;
                                             }
-                                            i = i + count; //чтоб в нее зашло
-                                            break;
+                                            count++;
                                         }
-                                        count++;
                                     }
                                 }
-                            }
-                            else
-                            {      //Перескакиваем фронт
-                                output = "false";
-                                int count = 0;
-                                for (int j = i; j <= item.Value; j++)
-                                {
-                                    ProgramData valueNext = DataGridTable[j + 1];
-                                    if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
-                                    {
-                                        if (count == 0) //Это если надо пропустить след. строку, но она S или R
-                                        {
-                                            i = i + 1;
-                                            break;
-                                        }
-                                        i = i + count; //чтоб в нее зашло
-                                        break;
-                                    }
-                                    count++;
-                                }
-                            }
-                        }
-                        else if (value.Operator.Contains("FN"))
-                        {
-                            var tempValue = Parse(output);
-                            if (Convert.ToInt32(tempValue) != FrontN[value.Key.ToString()])
-                            {
-                                if (Convert.ToInt32(tempValue) == 1)
-                                {
-                                    FrontN[value.Key.ToString()] = 1;
+                                else
+                                {      //Перескакиваем фронт
                                     output = "false";
                                     int count = 0;
                                     for (int j = i; j <= item.Value; j++)
@@ -904,35 +908,177 @@ namespace Galvanika
                                         count++;
                                     }
                                 }
+                            }
+                            else //Если есть BLD
+                            {
+                                if (Convert.ToInt32(Convert.ToBoolean(BLD)) != FrontP[value.Key.ToString()])
+                                {
+                                    if (FrontP[value.Key.ToString()] == 0)
+                                    {
+                                        for (int j = i; j <= item.Value; j++)
+                                        {
+                                            //int count = 0;
+                                            ProgramData valueNext = DataGridTable[j + 1];
+                                            if (valueNext.Operator == "=")
+                                            {
+                                                DataWrite(valueNext, "true");
+                                                FrontP[value.Key.ToString()] = 1;
+                                                //i = i + count + 1; //чтоб ее перепрыгнуло
+                                                break;
+                                            }
+                                            //count++;
+                                        }
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        FrontP[value.Key.ToString()] = 0;
+                                        for (int j = i; j <= item.Value; j++)
+                                        {
+                                            //int count = 0;
+                                            ProgramData valueNext = DataGridTable[j + 1];
+                                            if (valueNext.Operator == "=")
+                                            {
+                                                DataWrite(valueNext, "false"); //Обнуляем маркер
+                                                //i = i + count + 1; //чтоб ее перепрыгнуло
+                                                break;
+                                            }
+                                            //count++;
+                                        }
+                                        break;
+                                    }
+                                }
                                 else
                                 {
-                                    if (FrontN[value.Key.ToString()] == 1)
+                                    for (int j = i; j <= item.Value; j++)
                                     {
-                                        DataWrite(value, "true");
-                                        FrontN[value.Key.ToString()] = 0;
-                                        output = "";
+                                        int count = 0;
+                                        ProgramData valueNext = DataGridTable[j + 1];
+                                        if (valueNext.Operator == "=")
+                                        {
+                                            DataWrite(valueNext, "false");//Обнуляем маркер
+                                            i = i + count + 1; //чтоб ее перепрыгнуло
+                                            break;
+                                        }
+                                        count++;
                                     }
                                 }
                             }
-                            else
-                            //Перескакиваем в конец фронта
+                        }
+                        else if (value.Operator.Contains("FN"))
+                        {
+                            if (string.IsNullOrEmpty(BLD)) //Если нет BLD
                             {
-                                output = "false";
-                                int count = 0;
-                                for (int j = i; j <= item.Value; j++)
+                                var tempValue = Parse(output);
+                                if (Convert.ToInt32(tempValue) != FrontN[value.Key.ToString()])
                                 {
-                                    ProgramData valueNext = DataGridTable[j + 1];
-                                    if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
+                                    if (Convert.ToInt32(tempValue) == 1)
                                     {
-                                        if (count == 0) //Это если надо пропустить след. строку, но она S или R
+                                        FrontN[value.Key.ToString()] = 1;
+                                        output = "false";
+                                        int count = 0;
+                                        for (int j = i; j <= item.Value; j++)
                                         {
-                                            i = i + 1;
+                                            ProgramData valueNext = DataGridTable[j + 1];
+                                            if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
+                                            {
+                                                if (count == 0) //Это если надо пропустить след. строку, но она S или R
+                                                {
+                                                    i = i + 1;
+                                                    break;
+                                                }
+                                                i = i + count; //чтоб в нее зашло
+                                                break;
+                                            }
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (FrontN[value.Key.ToString()] == 1)
+                                        {
+                                            DataWrite(value, "true");
+                                            FrontN[value.Key.ToString()] = 0;
+                                            output = "";
+                                        }
+                                    }
+                                }
+                                else
+                                //Перескакиваем в конец фронта
+                                {
+                                    output = "false";
+                                    int count = 0;
+                                    for (int j = i; j <= item.Value; j++)
+                                    {
+                                        ProgramData valueNext = DataGridTable[j + 1];
+                                        if (valueNext.Operator == "SPBNB" || valueNext.Operator == "S" || valueNext.Operator == "R" || valueNext.Operator == "=")
+                                        {
+                                            if (count == 0) //Это если надо пропустить след. строку, но она S или R
+                                            {
+                                                i = i + 1;
+                                                break;
+                                            }
+                                            i = i + count; //чтоб в нее зашло
                                             break;
                                         }
-                                        i = i + count; //чтоб в нее зашло
+                                        count++;
+                                    }
+                                }
+                            }
+                            else //Если есть BLD
+                            {
+                                if (Convert.ToInt32(Convert.ToBoolean(BLD)) != FrontN[value.Key.ToString()])
+                                {
+                                    if (Convert.ToInt32(Convert.ToBoolean(BLD)) == 1)
+                                    {
+                                        FrontN[value.Key.ToString()] = 0;
+                                        for (int j = i; j <= item.Value; j++)
+                                        {
+                                            //int count = 0;
+                                            ProgramData valueNext = DataGridTable[j + 1];
+                                            if (valueNext.Operator == "=")
+                                            {
+                                                DataWrite(valueNext, "true");
+                                                //DataWrite(valueNext, "false"); 
+                                                //i = i + count + 1; //чтоб ее перепрыгнуло
+                                                break;
+                                            }
+                                            //count++;
+                                        }
                                         break;
                                     }
-                                    count++;
+                                    else
+                                    {
+                                        for (int j = i; j <= item.Value; j++)
+                                        {
+                                            //int count = 0;
+                                            ProgramData valueNext = DataGridTable[j + 1];
+                                            if (valueNext.Operator == "=")
+                                            {
+                                                DataWrite(valueNext, "false");//Обнуляем маркер
+                                                FrontN[value.Key.ToString()] = 1;
+                                                //i = i + count + 1; //чтоб ее перепрыгнуло
+                                                break;
+                                            }
+                                            //count++;
+                                        }
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    for (int j = i; j <= item.Value; j++)
+                                    {
+                                        int count = 0;
+                                        ProgramData valueNext = DataGridTable[j + 1];
+                                        if (valueNext.Operator == "=")
+                                        {
+                                            DataWrite(valueNext, "false");//Обнуляем маркер
+                                            i = i + count + 1; //чтоб ее перепрыгнуло
+                                            break;
+                                        }
+                                        count++;
+                                    }
                                 }
                             }
                         }
@@ -1468,7 +1614,7 @@ namespace Galvanika
                 ErrorString.Content = "Не удалось отправить выходные данные на плату";
                 CustomMessageBox.Show(ErrorString.Content.ToString());
             }
-            else if(result)
+            else if (result)
                 ErrorString.Content = " ";
         }
         private void timer_Tick_Input(object sender, EventArgs e)
@@ -1478,7 +1624,7 @@ namespace Galvanika
         private void ResetAll()
         {
             InputData = new List<int>() { 0, 0, 0, 0 };
-            MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            MarkerData = Enumerable.Repeat(0, 20).ToList();
             OutputData = new List<int>() { 0, 0, 0 };
             rsh.Write(OutputData);
         }
