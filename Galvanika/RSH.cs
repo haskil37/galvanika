@@ -13,8 +13,6 @@ namespace Galvanika
         Device device = new Device(BOARD_NAME);
         RshBoardPortInfo bpi = new RshBoardPortInfo();
 
-        List<int> InputTempValue = new List<int>() { 0, 0, 0, 0 };
-        List<int> InputTempValueSave = new List<int>() { 0, 0, 0, 0 };
         public bool Connect()
         {
             st = device.OperationStatus;
@@ -96,13 +94,8 @@ namespace Galvanika
             var byteToSave2 = Convert.ToByte(bits2, 2);
             InputData.Add(byteToSave2);
 
-            if (InputTempValue.SequenceEqual(InputData))
-                InputTempValueSave = InputData;
 
-            if (!InputTempValue.SequenceEqual(InputData))
-                InputTempValue = InputData;
-
-            return InputTempValueSave;
+            return InputData;
         }
         public bool Write(List<int> outputData)
         {

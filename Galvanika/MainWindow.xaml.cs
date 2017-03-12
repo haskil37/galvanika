@@ -24,7 +24,7 @@ namespace Galvanika
         public List<MyTimers> TimerGridTable = new List<MyTimers>();
 
         //124,126,93,1 - Исходное положение новое, 125,126,173,2 - старое.
-        public List<int> InputData = new List<int>() { 0, 0, 0, 1 };
+        public List<int> InputData = new List<int>() { 0, 0, 0, 0 };
         //public List<int> MarkerData = new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public List<int> MarkerData = Enumerable.Repeat(0, 20).ToList();
         public List<int> OutputData = new List<int>() { 0, 0, 0 };
@@ -303,6 +303,12 @@ namespace Galvanika
         }
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+            (ThreadStart)delegate ()
+            {
+                ServiceOutput();
+            }
+            );
             if (!e.Cancelled)
                 backgroundWorker.RunWorkerAsync();
         }
@@ -459,10 +465,10 @@ namespace Galvanika
             timerForTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timerForTimer.Start();
 
-            DispatcherTimer timerForInput = new DispatcherTimer();
-            timerForInput.Tick += new EventHandler(timer_Tick_Input);
-            timerForInput.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            timerForInput.Start();
+            //DispatcherTimer timerForInput = new DispatcherTimer();
+            //timerForInput.Tick += new EventHandler(timer_Tick_Input);
+            //timerForInput.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            //timerForInput.Start();
 
             DispatcherTimer timerForTimeRefresh = new DispatcherTimer();
             timerForTimeRefresh.Tick += new EventHandler(timeRefresh);
@@ -481,6 +487,7 @@ namespace Galvanika
         #region Расчет
         private void Calculate()
         {
+            InputData = rsh.Read();
             foreach (var item in StartEnd)
             {
                 string output = "";
@@ -1249,12 +1256,12 @@ namespace Galvanika
                     break;
                 default: //output
                     OutputData[Convert.ToInt32(address[0])] = byteToSave;
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                        (ThreadStart)delegate ()
-                        {
-                            ServiceOutput();
-                        }
-                    );
+                    //this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    //    (ThreadStart)delegate ()
+                    //    {
+                    //        ServiceOutput();
+                    //    }
+                    //);
                     break;
             }
             return;
@@ -1544,7 +1551,7 @@ namespace Galvanika
                     button_Service.Focus();
                     break;
                 case Key.F6:
-                    StartTest();
+                    //StartTest();
                     break;
                 default:
                     break;
@@ -1619,7 +1626,7 @@ namespace Galvanika
         }
         private void timer_Tick_Input(object sender, EventArgs e)
         {
-            InputData = rsh.Read(); //Считываем с платы и обновляем InputData
+            //InputData = rsh.Read(); //Считываем с платы и обновляем InputData
         }
         private void ResetAll()
         {
