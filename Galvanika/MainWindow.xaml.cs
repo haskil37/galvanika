@@ -337,6 +337,7 @@ namespace Galvanika
         int time = -1;
         private void timeRefresh(object sender, EventArgs e)
         {
+            currentTime.Content = DateTime.Now.ToString("F");
             if (time == -1)
                 return;
             TimeSpan timeElapse = TimeSpan.FromSeconds(time);
@@ -469,8 +470,6 @@ namespace Galvanika
                 return;
 
             FillTextBoxes();
-
-            currentTime.Content = DateTime.Now.ToString("F");
 
             backgroundWorker.DoWork += backgroundWorker_DoWork;
             backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
