@@ -73,7 +73,7 @@
                             <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="#FF96C8E1">
                                 <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
-                            <Label x:Name="select" Content="ü" FontFamily="Wingdings" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime" FontSize="20" Visibility="Hidden" Margin="0,0,-30,0"></Label>
+                            <Label x:Name="select" Content="ü" FontFamily="Wingdings" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Red" FontSize="20" Visibility="Hidden" Margin="0,0,-30,0"></Label>
                             <Label x:Name="selectText" Content="Выбрана" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime" FontSize="16" Visibility="Hidden" Margin="0,-5,-100,0" FlowDirection="RightToLeft"></Label>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -326,10 +326,189 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition Height="8*"/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button x:Name="Program3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="40" Cursor="Hand" TabIndex="1" IsEnabled="False" Click="Program_Click">1. Программа №3</Button>
-                    <Button x:Name="Program4" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="200" Height="40" Cursor="Hand" TabIndex="2" Click="Program_Click">2. Программа №4</Button>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width=".4*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="Program3"  Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" Height="40" Cursor="Hand" TabIndex="1" IsEnabled="False" Click="Program_Click">Программа №3</Button>
+                    <Button x:Name="Program4" HorizontalAlignment="Left" Grid.RowSpan="3" Grid.Row="2" VerticalAlignment="Center" Width="150" Height="40" Cursor="Hand" TabIndex="2" Click="Program_Click">Программа №4</Button>
+                    <Grid Grid.Column="1" Grid.RowSpan="3" Grid.Row="0" Height="60" VerticalAlignment="Center" Margin="0,-25,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Stroke="Lime" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="1" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="2" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="3" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="4" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="5" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="6" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="7" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="8" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="9" Grid.Row="1"/>
+                        <Rectangle Stroke="Red" Grid.Column="10"  StrokeThickness="3" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="11" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="12" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="13" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="14" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="15" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="16" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="17" Grid.Row="1"/>
+                        <Rectangle Stroke="Red" Grid.Column="18" StrokeThickness="3" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="19" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="20" Grid.Row="1"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="8" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="9" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="12" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="16" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="18" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="13" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="20" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="5" Foreground="Lime" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="6" Foreground="Lime" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="7" Foreground="Lime" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="8" Foreground="Lime" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="9" Foreground="Lime" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="10" Foreground="Lime" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="11" Foreground="Lime" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="12" Foreground="Lime" Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="13" Foreground="Lime" Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="14" Foreground="Lime" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="15" Foreground="Lime" Grid.Column="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="16" Foreground="Lime" Grid.Column="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="17" Foreground="Lime" Grid.Column="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="18" Foreground="Lime" Grid.Column="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="19" Foreground="Lime" Grid.Column="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="20" Foreground="Lime" Grid.Column="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="21" Foreground="Lime" Grid.Column="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="22" Foreground="Lime" Grid.Column="17" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="23" Foreground="Lime" Grid.Column="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="24" Foreground="Lime" Grid.Column="19" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="25" Foreground="Lime" Grid.Column="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.RowSpan="3" Grid.Row="2" Height="60" VerticalAlignment="Center" Margin="0,-25,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Rectangle Stroke="Lime" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="1" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="2" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="3" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="4" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="5" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="6" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="7" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="8" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="9" Grid.Row="1"/>
+                        <Rectangle Stroke="Red" Grid.Column="10"  StrokeThickness="3" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="11" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="12" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="13" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="14" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="15" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="16" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="17" Grid.Row="1"/>
+                        <Rectangle Stroke="Red" Grid.Column="18" StrokeThickness="3" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="19" Grid.Row="1"/>
+                        <Rectangle Stroke="Lime" Grid.Column="20" Grid.Row="1"/>
+                        <!--<Label Content="Ш" Foreground="Lime" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="8" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="9" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="12" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="16" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="18" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="13" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="20" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+                        <Label Content="5" Foreground="Lime" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="6" Foreground="Lime" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="7" Foreground="Lime" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="8" Foreground="Lime" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="9" Foreground="Lime" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="10" Foreground="Lime" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="11" Foreground="Lime" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="12" Foreground="Lime" Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="13" Foreground="Lime" Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="14" Foreground="Lime" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="15" Foreground="Lime" Grid.Column="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="16" Foreground="Lime" Grid.Column="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="17" Foreground="Lime" Grid.Column="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="18" Foreground="Lime" Grid.Column="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="19" Foreground="Lime" Grid.Column="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="20" Foreground="Lime" Grid.Column="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="21" Foreground="Lime" Grid.Column="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="22" Foreground="Lime" Grid.Column="17" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="23" Foreground="Lime" Grid.Column="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="24" Foreground="Lime" Grid.Column="19" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="25" Foreground="Lime" Grid.Column="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+
                 </Grid>
             </TabItem>
             <TabItem>

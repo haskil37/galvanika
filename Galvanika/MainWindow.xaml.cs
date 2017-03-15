@@ -53,7 +53,7 @@ namespace Galvanika
         }
         #endregion
         #region Чтение файла с программой
-        private string Path = "0000000d.AWL";
+        private string Path = "3.AWL";
         private List<string> tempDB;
         private List<string> tempProgramList;
         private bool ReadFileDB()
@@ -1540,7 +1540,7 @@ namespace Galvanika
                         //backgroundWorker.CancelAsync();
                     }
 
-                    //tabControl.SelectedIndex = 0;
+                    tabControl.SelectedIndex = 0;
                     button_Start.Focus();
                     break;
                 case Key.F2:
@@ -1567,16 +1567,16 @@ namespace Galvanika
                     if (tabControl.SelectedIndex != 2)
                     {
                         tabControl.SelectedIndex = 2;
-                        if (Program3.IsEnabled)
-                            Program3.Focus();
-                        else
-                            Program4.Focus();
+                        //if (Program3.IsEnabled)
+                        //    Program3.Focus();
+                        //else
+                        //    Program4.Focus();
                     }
                     else
                     {
                         tabControl.SelectedIndex = 0;
-                        button_Info.Focus();
                     }
+                    button_Info.Focus();
                     break;
                 case Key.F5:
                     if(tabControl.SelectedIndex != 3)
@@ -1588,13 +1588,15 @@ namespace Galvanika
                 case Key.F6:
                     StartTest();
                     break;
-                case Key.D1:
+                case Key.D3:
                     if (tabControl.SelectedIndex == 2)
-                        Program_Click(Program3, null);
+                        if (Program3.IsEnabled)
+                            Program_Click(Program3, null);
                     break;
-                case Key.D2:
+                case Key.D4:
                     if (tabControl.SelectedIndex == 2)
-                        Program_Click(Program4, null);
+                        if (Program4.IsEnabled)
+                            Program_Click(Program4, null);
                     break;
                 default:
                     break;
@@ -1682,21 +1684,22 @@ namespace Galvanika
                 if (pressButton.Name == "Program3")
                 {
                     ProgramString.Content = "Выбрана программа 3";
-                    Path = "0000000d.AWL";
+                    Path = "3.AWL";
                     Program3.IsEnabled = false;
                     Program4.IsEnabled = true;
-                    Program4.Focus();
+                    //Program4.Focus();
                 }
 
                 if (pressButton.Name == "Program4")
                 {
                     ProgramString.Content = "Выбрана программа 4";
-                    Path = "0000000e.AWL";
+                    Path = "4.AWL";
                     Program4.IsEnabled = false;
                     Program3.IsEnabled = true;
-                    Program3.Focus();
+                    //Program3.Focus();
                 }
                 StartEnd.Clear();
+                DataGridTable.Clear();
                 ReadFileDB();
                 newProgram = -1;
                 timer.Stop();
