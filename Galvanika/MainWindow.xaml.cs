@@ -337,16 +337,8 @@ namespace Galvanika
         int time = -1;
         private void timeRefresh(object sender, EventArgs e)
         {
-            currentTime.Content = DateTime.Now.ToString("F");
-            if (DB["54.5"].ToLower() == "true" && time == -1)
-                time = 1;
-            else if (DB["54.5"].ToLower() == "true")
-                time++;
-            else if (DB["54.5"].ToLower() == "false")
-            {
-                time = -1;
+            if (time == -1)
                 return;
-            }
             TimeSpan timeElapse = TimeSpan.FromSeconds(time);
             currentTimeElapse.Content = string.Format("{0:D2}ч:{1:D2}м:{2:D2}с", timeElapse.Hours, timeElapse.Minutes, timeElapse.Seconds);
         }
@@ -477,6 +469,8 @@ namespace Galvanika
                 return;
 
             FillTextBoxes();
+
+            currentTime.Content = DateTime.Now.ToString("F");
 
             backgroundWorker.DoWork += backgroundWorker_DoWork;
             backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
@@ -1128,6 +1122,14 @@ namespace Galvanika
                     }
                 }
             }
+
+            if (DB["54.5"].ToLower() == "true" && time == -1)
+                time = 1;
+            else if (DB["54.5"].ToLower() == "true")
+                time++;
+            else if (DB["54.5"].ToLower() == "false")
+                time = -1;
+
             if (newProgram == 1)
                 newProgram = 2;
         }
