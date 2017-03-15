@@ -54,12 +54,16 @@ namespace Galvanika
         #endregion
         #region Чтение файла с программой
         private string Path = "0000000d.AWL";
-        private List<string> tempDB = new List<string>();
-        private List<string> tempProgramList = new List<string>();
+        private List<string> tempDB;
+        private List<string> tempProgramList;
         private bool ReadFileDB()
         {
             if (!File.Exists(Path))
                 return false;
+
+            tempDB = new List<string>();
+            tempProgramList = new List<string>();
+
             using (StreamReader fs = new StreamReader(Path, Encoding.Default))
             {
                 int start = 0;
@@ -117,14 +121,27 @@ namespace Galvanika
                     if (endOfString.Contains(';'))
                         endOfString = endOfString.Remove(endOfString.Length - 1, 1);
 
-                    DB.Add(tempIndex.Trim(), endOfString);
+                    if (DB.ContainsKey(tempIndex.Trim()))
+                        DB[tempIndex.Trim()] = endOfString;
+                    else
+                        DB.Add(tempIndex.Trim(), endOfString);
                 }
                 else
                 {
                     if (tempThirdString[0].Contains("BOOL"))
-                        DB.Add(tempIndex, "False");
+                    {
+                        if (DB.ContainsKey(tempIndex.Trim()))
+                            DB[tempIndex.Trim()] = "False";
+                        else
+                            DB.Add(tempIndex.Trim(), "False");
+                    }
                     else
-                        DB.Add(tempIndex, "0");
+                    {
+                        if (DB.ContainsKey(tempIndex.Trim()))
+                            DB[tempIndex.Trim()] = "0";
+                        else
+                            DB.Add(tempIndex.Trim(), "0");
+                    }
                 }
                 var tempString = itemNew.Substring(itemNew.IndexOf('_') + 1); //Дважды удаляем до знака "_"
                 tempString = tempString.Substring(tempString.IndexOf('_') + 1);
@@ -156,7 +173,10 @@ namespace Galvanika
                             newTempTime = Convert.ToInt32(tempTime);
                             newTempTime = newTempTime * 1000;
                         }
-                        Stek.Add(tempNameP[0].Trim(), newTempTime);
+                        if (Stek.ContainsKey(tempNameP[0].Trim()))
+                            Stek[tempNameP[0].Trim()] = newTempTime;
+                        else
+                            Stek.Add(tempNameP[0].Trim(), newTempTime);
                     }
                 }
                 else
@@ -293,23 +313,25 @@ namespace Galvanika
         }
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (backgroundWorker.CancellationPending)
-            {
-                e.Cancel = true;
-                return;
-            }
-            else
+            //if (backgroundWorker.CancellationPending)
+            //{
+            //    e.Cancel = true;
+            //    ResetAll();
+            //    return;
+            //}
+            //else
+            if (newProgram != 2)
                 Calculate();
         }
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-            (ThreadStart)delegate ()
-            {
+            //this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+            //(ThreadStart)delegate ()
+            //{
                 ServiceOutput();
-            }
-            );
-            if (!e.Cancelled)
+            //}
+            //);
+            //if (!e.Cancelled)
                 backgroundWorker.RunWorkerAsync();
         }
         int time = -1;
@@ -1106,6 +1128,8 @@ namespace Galvanika
                     }
                 }
             }
+            if (newProgram == 1)
+                newProgram = 2;
         }
         #endregion
         #region Чтение и запись
@@ -1446,24 +1470,16 @@ namespace Galvanika
         {
             switch (((Button)sender).TabIndex)
             {
-                //case 1:
-                //    if (!backgroundWorker.IsBusy)
-                //    {
-                //        ResetAll(); //Возможно избыточно
-                //        backgroundWorker.RunWorkerAsync();
-                //    }
-                //    else
-                //    {
-                //        if (DB["0.3"].ToLower() == "true")
-                //            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
-                //        else
-                //        {
-                //            //backgroundWorker.CancelAsync();
-                //            ResetAll();
-                //        }
-                //    }
-                //    tabControl.SelectedIndex = 0;
-                //    break;
+                case 1:
+                    if (DB["0.3"].ToLower() == "true")
+                        CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
+                    else
+                    {
+                        ResetAll();
+                        ParseDB();
+                    }
+                    button_Start.Focus();
+                    break;
                 case 2:
                     if (DB["54.3"].ToLower() == "false")
                     {
@@ -1484,7 +1500,19 @@ namespace Galvanika
                     button_Stekanie.Focus();
                     break;
                 case 4:
-                    button_Info.Focus();
+                    if (tabControl.SelectedIndex != 2)
+                    {
+                        tabControl.SelectedIndex = 2;
+                        if (Program3.IsEnabled)
+                            Program3.Focus();
+                        else
+                            Program4.Focus();
+                    }
+                    else
+                    {
+                        tabControl.SelectedIndex = 0;
+                        button_Info.Focus();
+                    }
                     break;
                 case 5:
                     if (tabControl.SelectedIndex != 3)
@@ -1501,25 +1529,19 @@ namespace Galvanika
         {
             switch (e.Key)
             {
-                //case Key.F1:
-                //    if (!backgroundWorker.IsBusy)
-                //    {
-                //        ResetAll(); //Возможно избыточно
-                //        backgroundWorker.RunWorkerAsync();
-                //    }
-                //    else
-                //    {
-                //        if (DB["0.3"].ToLower() == "true")
-                //            CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
-                //        else
-                //        {
-                //            //backgroundWorker.CancelAsync();
-                //            ResetAll();
-                //        }
-                //    }
-                //    tabControl.SelectedIndex = 0;
-                //    button_Start.Focus();
-                //    break;
+                case Key.F1:
+                    if (DB["0.3"].ToLower() == "true")
+                        CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
+                    else
+                    {
+                        ResetAll();
+                        ParseDB();
+                        //backgroundWorker.CancelAsync();
+                    }
+
+                    //tabControl.SelectedIndex = 0;
+                    button_Start.Focus();
+                    break;
                 case Key.F2:
                     if (DB["54.3"].ToLower() == "false")
                     {
@@ -1541,7 +1563,19 @@ namespace Galvanika
                     button_Stekanie.Focus();
                     break;
                 case Key.F4:
-                    button_Info.Focus();
+                    if (tabControl.SelectedIndex != 2)
+                    {
+                        tabControl.SelectedIndex = 2;
+                        if (Program3.IsEnabled)
+                            Program3.Focus();
+                        else
+                            Program4.Focus();
+                    }
+                    else
+                    {
+                        tabControl.SelectedIndex = 0;
+                        button_Info.Focus();
+                    }
                     break;
                 case Key.F5:
                     if(tabControl.SelectedIndex != 3)
@@ -1551,7 +1585,15 @@ namespace Galvanika
                     button_Service.Focus();
                     break;
                 case Key.F6:
-                    //StartTest();
+                    StartTest();
+                    break;
+                case Key.D1:
+                    if (tabControl.SelectedIndex == 2)
+                        Program_Click(Program3, null);
+                    break;
+                case Key.D2:
+                    if (tabControl.SelectedIndex == 2)
+                        Program_Click(Program4, null);
                     break;
                 default:
                     break;
@@ -1610,19 +1652,73 @@ namespace Galvanika
                 this.Close();
             }
         }
+        public int newProgram = -1;
+        Button pressButton;
+        DispatcherTimer timer;
+        private void Program_Click(object sender, RoutedEventArgs e)
+        {
+            if (DB["0.3"].ToLower() == "true")
+            {
+                CustomMessageBox.Show("Для того чтобы сменить программу, нужно выключить автоматический режим");
+                return;
+            }
+            pressButton = sender as Button;
+            //Отсанавливаем программу глобальной переменной 
+            // -1 - работаем
+            //  1 - ждем конца
+            //  2 - закончили
+            //Запускаем таймер
+            timer = new DispatcherTimer();
+            timer.Tick += new EventHandler(timer_ToNewProgram);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            timer.Start();
+            newProgram = 1;
+        }
+        private void timer_ToNewProgram(object sender, EventArgs e)
+        {
+            if (newProgram == 2)
+            {
+                if (pressButton.Name == "Program3")
+                {
+                    ProgramString.Content = "Выбрана программа 3";
+                    Path = "0000000d.AWL";
+                    Program3.IsEnabled = false;
+                    Program4.IsEnabled = true;
+                    Program4.Focus();
+                }
+
+                if (pressButton.Name == "Program4")
+                {
+                    ProgramString.Content = "Выбрана программа 4";
+                    Path = "0000000e.AWL";
+                    Program4.IsEnabled = false;
+                    Program3.IsEnabled = true;
+                    Program3.Focus();
+                }
+                StartEnd.Clear();
+                ReadFileDB();
+                newProgram = -1;
+                timer.Stop();
+            }
+        }
         #endregion
         #region Обновление данных в сервисном режиме и на плате, считываение с платы
         private void ServiceOutput()
         {
             var result = rsh.Write(OutputData); //Обновляем данные платы
             var errorString = ErrorString.Content.ToString();
-            if (!result && string.IsNullOrEmpty(errorString.Trim()))
+            if (!result && ErrorString.Visibility == Visibility.Hidden)
             {
-                ErrorString.Content = "Не удалось отправить выходные данные на плату";
+                ErrorString.Visibility = Visibility.Visible;
                 CustomMessageBox.Show(ErrorString.Content.ToString());
             }
             else if (result)
-                ErrorString.Content = " ";
+                ErrorString.Visibility = Visibility.Hidden;
+
+            if (ErrorString.Visibility == Visibility.Hidden)
+                ProgramString.Visibility = Visibility.Visible;
+            else
+                ProgramString.Visibility = Visibility.Hidden;
         }
         private void timer_Tick_Input(object sender, EventArgs e)
         {
@@ -1632,6 +1728,7 @@ namespace Galvanika
         {
             InputData = new List<int>() { 0, 0, 0, 0 };
             MarkerData = Enumerable.Repeat(0, 20).ToList();
+            //MarkerData[0] = 1;
             OutputData = new List<int>() { 0, 0, 0 };
             rsh.Write(OutputData);
         }

@@ -69,13 +69,21 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="#FF96C8E1">
-                            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
+                        <Grid>
+                            <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="#FF96C8E1">
+                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <Label x:Name="select" Content="ü" FontFamily="Wingdings" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime" FontSize="20" Visibility="Hidden" Margin="0,0,-30,0"></Label>
+                            <Label x:Name="selectText" Content="Выбрана" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime" FontSize="16" Visibility="Hidden" Margin="0,-5,-100,0" FlowDirection="RightToLeft"></Label>
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Button.IsFocused" Value="True">
                                 <Setter TargetName="Border" Property="BorderBrush" Value="Lime" />
                                 <Setter Property="BorderThickness" TargetName="Border" Value="4"/>
+                            </Trigger>
+                            <Trigger Property="Button.IsEnabled" Value="False">
+                                <Setter Property="Visibility" TargetName="select" Value="Visible"/>
+                                <Setter Property="Visibility" TargetName="selectText" Value="Visible"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -137,11 +145,12 @@
         <Label x:Name="currentTime" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Lime"/>
         <Label x:Name="currentTimeElapse" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime"/>
 
-        <Label x:Name="ErrorString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red" Content=" "/>
+        <Label x:Name="ErrorString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red" Content="Не удалось отправить выходные данные на плату" Visibility="Hidden"/>
+        <Label x:Name="ProgramString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Lime" Content="Выбрана программа 3" Visibility="Hidden"/>
 
-        <!--<Button x:Name="button_Start" Margin="5" Grid.Row="2" Cursor="Hand" Click="button_Menu_Click" TabIndex="1" >
+        <Button x:Name="button_Start" Margin="5" Grid.Row="2" Cursor="Hand" Click="button_Menu_Click" TabIndex="1" >
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F1. Запуск линии<LineBreak/>с нулевого положения</TextBlock>
-        </Button>-->
+        </Button>
         <Button x:Name="button_Stop" Grid.Row="2" Grid.Column="1" Margin="5" Cursor="Hand" TabIndex="2" Click="button_Menu_Click" >
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F2. Стоп<LineBreak/>в исходном</TextBlock>
         </Button>
@@ -313,7 +322,15 @@
                 </Grid>
             </TabItem>
             <TabItem>
-
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition Height="8*"/>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="Program3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="40" Cursor="Hand" TabIndex="1" IsEnabled="False" Click="Program_Click">1. Программа №3</Button>
+                    <Button x:Name="Program4" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="200" Height="40" Cursor="Hand" TabIndex="2" Click="Program_Click">2. Программа №4</Button>
+                </Grid>
             </TabItem>
             <TabItem>
                 <Grid x:Name="testWindow" >
