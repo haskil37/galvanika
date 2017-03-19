@@ -135,6 +135,26 @@
         </Grid>
 
 
+        <Grid x:Name="Confirm" Width="600" Height="100" Grid.RowSpan="3" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="3" Visibility="Hidden" Background="Black">
+            <Rectangle Stroke="Red" StrokeThickness="2" Grid.RowSpan="6"/>
+            <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <DockPanel LastChildFill="true" HorizontalAlignment="Center">
+                        <Label Content="Для подтверждения запуска программы с нуля нажмите" VerticalAlignment="Center" Foreground="Lime" FontSize="20" />
+                        <Label Content="Enter" VerticalAlignment="Center" Foreground="Red" FontSize="20" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="true" Grid.Row="1"  HorizontalAlignment="Center">
+                        <Label Content="для возврата к работе нажмите" VerticalAlignment="Center" Foreground="Lime" FontSize="20" />
+                        <Label Content="Esc" VerticalAlignment="Center" Foreground="Red" FontSize="20" />
+                    </DockPanel>
+                </Grid>
+            </Label>
+        </Grid>
+
 
 
 
@@ -474,18 +494,18 @@
                         <Rectangle Stroke="Red" Grid.Column="18" StrokeThickness="3" Grid.Row="1"/>
                         <Rectangle Stroke="Lime" Grid.Column="19" Grid.Row="1"/>
                         <Rectangle Stroke="Lime" Grid.Column="20" Grid.Row="1"/>
-                        <!--<Label Content="Ш" Foreground="Lime" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Ш" Foreground="Lime" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Ш" Foreground="Lime" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Ш" Foreground="Lime" Grid.Column="8" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Ш" Foreground="Lime" Grid.Column="9" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="9" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Ш" Foreground="Lime" Grid.Column="12" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Ш" Foreground="Lime" Grid.Column="16" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="16" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Ш" Foreground="Lime" Grid.Column="18" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Б" Foreground="Lime" Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Б" Foreground="Lime" Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Б" Foreground="Lime" Grid.Column="13" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Б" Foreground="Lime" Grid.Column="20" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+                        <Label Content="Б" Foreground="Lime" Grid.Column="20" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="5" Foreground="Lime" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="6" Foreground="Lime" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="7" Foreground="Lime" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>

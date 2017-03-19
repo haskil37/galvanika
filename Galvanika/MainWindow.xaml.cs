@@ -334,13 +334,15 @@ namespace Galvanika
             //if (!e.Cancelled)
                 backgroundWorker.RunWorkerAsync();
         }
-        int time = -1;
+        bool timeCikl = false;
+        int timee = 0;
         private void timeRefresh(object sender, EventArgs e)
         {
             currentTime.Content = DateTime.Now.ToString("F");
-            if (time == -1)
+            if (!timeCikl)
                 return;
-            TimeSpan timeElapse = TimeSpan.FromSeconds(time);
+            TimeSpan timeElapse = TimeSpan.FromSeconds(timee);
+            timee++;
             currentTimeElapse.Content = string.Format("{0:D2}ч:{1:D2}м:{2:D2}с", timeElapse.Hours, timeElapse.Minutes, timeElapse.Seconds);
         }
         private void timerForVisualDataRefresh_Tick(object sender, EventArgs e)
@@ -1122,13 +1124,18 @@ namespace Galvanika
                 }
             }
 
-            if (DB["54.5"].ToLower() == "true" && time == -1)
-                time = 1;
-            else if (DB["54.5"].ToLower() == "true")
-                time++;
+            if (DB["54.5"].ToLower() == "true" && !timeCikl)
+            {
+                timee = 1;
+                timeCikl = true;
+            }
+            //else if (DB["54.5"].ToLower() == "true")
+            //    time++;
             else if (DB["54.5"].ToLower() == "false")
-                time = -1;
-
+            {
+                timee = 0;
+                timeCikl = false;
+            }
             if (newProgram == 1)
                 newProgram = 2;
         }
@@ -1535,13 +1542,27 @@ namespace Galvanika
                         CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
                     else
                     {
-                        ResetAll();
-                        ParseDB();
+                        Confirm.Visibility = Visibility.Visible;
+
+                        //ResetAll();
+                        //ParseDB();
                         //backgroundWorker.CancelAsync();
                     }
 
                     tabControl.SelectedIndex = 0;
                     button_Start.Focus();
+                    break;
+                case Key.Escape:
+                    if (Confirm.Visibility == Visibility.Visible)
+                        Confirm.Visibility = Visibility.Hidden;
+                    break;
+                case Key.Enter:
+                    if (Confirm.Visibility == Visibility.Visible)
+                    {
+                        Confirm.Visibility = Visibility.Hidden;
+                        ResetAll();
+                        ParseDB();
+                    }
                     break;
                 case Key.F2:
                     if (DB["54.3"].ToLower() == "false")
@@ -1586,7 +1607,7 @@ namespace Galvanika
                     button_Service.Focus();
                     break;
                 case Key.F6:
-                    StartTest();
+                    //StartTest();
                     break;
                 case Key.D3:
                     if (tabControl.SelectedIndex == 2)
