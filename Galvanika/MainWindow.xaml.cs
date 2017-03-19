@@ -492,10 +492,10 @@ namespace Galvanika
             timerForTimeRefresh.Interval = new TimeSpan(0, 0, 0, 1);
             timerForTimeRefresh.Start();
 
-            DispatcherTimer timerForVisualDataRefresh = new DispatcherTimer();
-            timerForVisualDataRefresh.Tick += new EventHandler(timerForVisualDataRefresh_Tick);
-            timerForVisualDataRefresh.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            timerForVisualDataRefresh.Start();
+            //DispatcherTimer timerForVisualDataRefresh = new DispatcherTimer();
+            //timerForVisualDataRefresh.Tick += new EventHandler(timerForVisualDataRefresh_Tick);
+            //timerForVisualDataRefresh.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            //timerForVisualDataRefresh.Start();
 
             var result = rsh.Connect();
             ResetAll(); //Возможно избыточно
@@ -505,6 +505,13 @@ namespace Galvanika
         private void Calculate()
         {
             InputData = rsh.Read();
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+            (ThreadStart)delegate ()
+            {
+                timerForVisualDataRefresh();
+            }
+            );
+
             foreach (var item in StartEnd)
             {
                 string output = "";
@@ -795,17 +802,20 @@ namespace Galvanika
                             var tempOutputForParse = tempOutput.TrimEnd();
                             if (tempOutputForParse.LastIndexOf(' ') != -1)
                             {
-                                tempOutputForParse = tempOutputForParse.Substring(0, tempOutputForParse.LastIndexOf(' '));
-                                if (!Parse(tempOutputForParse))
-                                    break;
+                                tempOutput = tempOutputForParse.Substring(0, tempOutputForParse.LastIndexOf(' '));
+                                //if (!Parse(tempOutputForParse))
+                                    //break;
                             }
-                            if (output.Replace(tempOutput, "").Length != 0)
-                            {
-                                BLD = output.Replace(tempOutput, "");
-                                BLD = BLD.Remove(0, 1).Trim();
-                            }
-                            else
-                                BLD = output;
+                            BLD = tempOutput.Trim();
+//if(InputData[0]==126)
+//                            { }
+                            //if (output.Replace(tempOutput, "").Length != 0)
+                            //{
+                            //    BLD = output.Replace(tempOutput, "");
+                            //    BLD = BLD.Remove(0, 1).Trim();
+                            //}
+                            //else
+                            //    BLD = output;
                         }
 
                         if (value.Operator.Contains("SPBNB")) //Типа goto
@@ -957,6 +967,7 @@ namespace Galvanika
                                     else
                                     {
                                         FrontP[value.Key.ToString()] = 0;
+                                        break;
                                         for (int j = i; j <= item.Value; j++)
                                         {
                                             //int count = 0;
@@ -974,6 +985,7 @@ namespace Galvanika
                                 }
                                 else
                                 {
+                                    break;
                                     for (int j = i; j <= item.Value; j++)
                                     {
                                         int count = 0;
@@ -1055,7 +1067,8 @@ namespace Galvanika
                                 {
                                     if (Convert.ToInt32(Convert.ToBoolean(BLD)) == 1)
                                     {
-                                        FrontN[value.Key.ToString()] = 0;
+                                        FrontN[value.Key.ToString()] = 1;
+                                        break;
                                         for (int j = i; j <= item.Value; j++)
                                         {
                                             //int count = 0;
@@ -1080,7 +1093,7 @@ namespace Galvanika
                                             if (valueNext.Operator == "=")
                                             {
                                                 DataWrite(valueNext, "false");//Обнуляем маркер
-                                                FrontN[value.Key.ToString()] = 1;
+                                                FrontN[value.Key.ToString()] = 0;
                                                 //i = i + count + 1; //чтоб ее перепрыгнуло
                                                 break;
                                             }
@@ -1091,6 +1104,7 @@ namespace Galvanika
                                 }
                                 else
                                 {
+                                    break;
                                     for (int j = i; j <= item.Value; j++)
                                     {
                                         int count = 0;
@@ -1123,7 +1137,6 @@ namespace Galvanika
                     }
                 }
             }
-
             if (DB["54.5"].ToLower() == "true" && !timeCikl)
             {
                 timee = 1;
@@ -1141,6 +1154,116 @@ namespace Galvanika
         }
         #endregion
         #region Чтение и запись
+
+        private void timerForVisualDataRefresh()
+        {
+                for (int i = 0; i < 4; i++)
+                {
+                    var tempBits = Convert.ToString(InputData[i], 2);
+                    while (tempBits.Length < 8)
+                        tempBits = tempBits.Insert(0, "0");
+                    tempBits = ReverseString(tempBits);
+                    for (int j = 0; j <= tempBits.Length; j++)
+                    {
+                        CheckBox chekbox = tabControl.FindName("Input" + i + "Bit" + j) as CheckBox;
+                        if (chekbox != null)
+                        {
+                            if (tempBits[j] == '1')
+                                chekbox.IsChecked = true;
+                            else
+                                chekbox.IsChecked = false;
+                        }
+                    }
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    var tempBits = Convert.ToString(OutputData[i], 2);
+                    while (tempBits.Length < 8)
+                        tempBits = tempBits.Insert(0, "0");
+                    tempBits = ReverseString(tempBits);
+                    for (int j = 0; j <= tempBits.Length; j++)
+                    {
+                        CheckBox chekbox = tabControl.FindName("Output" + i + "Bit" + j) as CheckBox;
+                        if (chekbox != null)
+                        {
+                            if (tempBits[j] == '1')
+                                chekbox.IsChecked = true;
+                            else
+                                chekbox.IsChecked = false;
+                        }
+                    }
+                }
+                //Обновляем таблицу действий операторов
+                zadOp1.Content = DB["46"];
+                zadOp2.Content = DB["44"];
+                istOp1.Content = DB["52"];
+                istOp2.Content = DB["42"];
+                rasOp1.Content = DB["50"];
+                rasOp2.Content = DB["40"];
+
+                deyOp1.Foreground = new SolidColorBrush(Colors.Lime);
+                deyOp2.Foreground = new SolidColorBrush(Colors.Lime);
+
+                if (DB["0.2"].ToLower() == "true")
+                    deyOp1.Content = "Исходное";
+                else
+                    deyOp1.Content = "";
+
+                if (DB["0.5"].ToLower() == "true")
+                {
+                    deyOp1.Foreground = new SolidColorBrush(Colors.Red);
+                    deyOp1.Content = "Ошибка позиции";
+                }
+                if (DB["1.0"].ToLower() == "true")
+                    deyOp1.Content = "Ожидание";
+                if (DB["1.1"].ToLower() == "true")
+                    deyOp1.Content = "Подъем";
+                if (DB["1.2"].ToLower() == "true")
+                    deyOp1.Content = "Опускание";
+                if (DB["1.5"].ToLower() == "true")
+                    deyOp1.Content = "Ход влево";
+                if (DB["1.6"].ToLower() == "true")
+                    deyOp1.Content = "Ход вправо";
+                if (DB["1.7"].ToLower() == "true")
+                {
+                    deyOp1.Foreground = new SolidColorBrush(Colors.Red);
+                    deyOp1.Content = "Ошибка датчиков";
+                }
+                if (DB["54.4"].ToLower() == "true")
+                    deyOp1.Content = "Ожидание загрузки";
+
+                if (DB["0.1"].ToLower() == "true")
+                    deyOp2.Content = "Исходное";
+                else
+                    deyOp2.Content = "";
+                if (DB["0.6"].ToLower() == "true")
+                {
+                    deyOp2.Foreground = new SolidColorBrush(Colors.Red);
+                    deyOp2.Content = "Ошибка позиции";
+                }
+                if (DB["0.7"].ToLower() == "true")
+                    deyOp2.Content = "Ожидание";
+                if (DB["1.3"].ToLower() == "true")
+                    deyOp2.Content = "Подъем";
+                if (DB["1.4"].ToLower() == "true")
+                    deyOp2.Content = "Опускание";
+                if (DB["54.0"].ToLower() == "true")
+                    deyOp2.Content = "Ход влево";
+                if (DB["54.1"].ToLower() == "true")
+                    deyOp2.Content = "Ход вправо";
+                if (DB["54.2"].ToLower() == "true")
+                {
+                    deyOp2.Foreground = new SolidColorBrush(Colors.Red);
+                    deyOp2.Content = "Ошибка датчиков";
+                }
+                if (DB["54.4"].ToLower() == "true")
+                    deyOp2.Content = "Ожидание загрузки";
+
+                if (DB["54.6"].ToLower() == "true")
+                    deyOp1.Content = "Выдержка";
+                if (DB["54.7"].ToLower() == "true")
+                    deyOp2.Content = "Выдержка";
+        }
         private string ReverseString(string s)
         {
             char[] value = s.ToCharArray();
