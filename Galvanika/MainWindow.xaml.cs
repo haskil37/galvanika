@@ -526,7 +526,6 @@ namespace Galvanika
                     ProgramData value = DataGridTable[i];
                     if (value == null)
                         break;
-
                     if (value.Operator.Contains("=") && !value.Operator.Contains("I")) //Вывод
                     {
                         if (!string.IsNullOrEmpty(doubleBKT))
@@ -897,6 +896,7 @@ namespace Galvanika
                                     {
                                         FrontP[value.Key.ToString()] = 1;
                                         DataWrite(value, "true");
+                                        //output = "";
                                     }
                                     else
                                     {
@@ -967,37 +967,39 @@ namespace Galvanika
                                     else
                                     {
                                         FrontP[value.Key.ToString()] = 0;
-                                        break;
-                                        for (int j = i; j <= item.Value; j++)
-                                        {
-                                            //int count = 0;
-                                            ProgramData valueNext = DataGridTable[j + 1];
-                                            if (valueNext.Operator == "=")
-                                            {
-                                                DataWrite(valueNext, "false"); //Обнуляем маркер
-                                                //i = i + count + 1; //чтоб ее перепрыгнуло
-                                                break;
-                                            }
-                                            //count++;
-                                        }
-                                        break;
+                                        output = "false";
+                                        //break;
+                                        //for (int j = i; j <= item.Value; j++)
+                                        //{
+                                        //    //int count = 0;
+                                        //    ProgramData valueNext = DataGridTable[j + 1];
+                                        //    if (valueNext.Operator == "=")
+                                        //    {
+                                        //        DataWrite(valueNext, "false"); //Обнуляем маркер
+                                        //        //i = i + count + 1; //чтоб ее перепрыгнуло
+                                        //        break;
+                                        //    }
+                                        //    //count++;
+                                        //}
+                                        //break;
                                     }
                                 }
                                 else
                                 {
-                                    break;
-                                    for (int j = i; j <= item.Value; j++)
-                                    {
-                                        int count = 0;
-                                        ProgramData valueNext = DataGridTable[j + 1];
-                                        if (valueNext.Operator == "=")
-                                        {
-                                            DataWrite(valueNext, "false");//Обнуляем маркер
-                                            i = i + count + 1; //чтоб ее перепрыгнуло
-                                            break;
-                                        }
-                                        count++;
-                                    }
+                                    output = "false";
+                                    //break;
+                                    //for (int j = i; j <= item.Value; j++)
+                                    //{
+                                    //    int count = 0;
+                                    //    ProgramData valueNext = DataGridTable[j + 1];
+                                    //    if (valueNext.Operator == "=")
+                                    //    {
+                                    //        DataWrite(valueNext, "false");//Обнуляем маркер
+                                    //        i = i + count + 1; //чтоб ее перепрыгнуло
+                                    //        break;
+                                    //    }
+                                    //    count++;
+                                    //}
                                 }
                             }
                         }
@@ -1035,7 +1037,7 @@ namespace Galvanika
                                         {
                                             DataWrite(value, "true");
                                             FrontN[value.Key.ToString()] = 0;
-                                            output = "";
+                                            //output = "";
                                         }
                                     }
                                 }
@@ -1068,21 +1070,22 @@ namespace Galvanika
                                     if (Convert.ToInt32(Convert.ToBoolean(BLD)) == 1)
                                     {
                                         FrontN[value.Key.ToString()] = 1;
-                                        break;
-                                        for (int j = i; j <= item.Value; j++)
-                                        {
-                                            //int count = 0;
-                                            ProgramData valueNext = DataGridTable[j + 1];
-                                            if (valueNext.Operator == "=")
-                                            {
-                                                DataWrite(valueNext, "true");
-                                                //DataWrite(valueNext, "false"); 
-                                                //i = i + count + 1; //чтоб ее перепрыгнуло
-                                                break;
-                                            }
-                                            //count++;
-                                        }
-                                        break;
+                                        output = "false";
+                                        //break;
+                                        //for (int j = i; j <= item.Value; j++)
+                                        //{
+                                        //    //int count = 0;
+                                        //    ProgramData valueNext = DataGridTable[j + 1];
+                                        //    if (valueNext.Operator == "=")
+                                        //    {
+                                        //        DataWrite(valueNext, "true");
+                                        //        //DataWrite(valueNext, "false"); 
+                                        //        //i = i + count + 1; //чтоб ее перепрыгнуло
+                                        //        break;
+                                        //    }
+                                        //    //count++;
+                                        //}
+                                        //break;
                                     }
                                     else
                                     {
@@ -1092,7 +1095,7 @@ namespace Galvanika
                                             ProgramData valueNext = DataGridTable[j + 1];
                                             if (valueNext.Operator == "=")
                                             {
-                                                DataWrite(valueNext, "false");//Обнуляем маркер
+                                                DataWrite(valueNext, "true");//Обнуляем маркер
                                                 FrontN[value.Key.ToString()] = 0;
                                                 //i = i + count + 1; //чтоб ее перепрыгнуло
                                                 break;
@@ -1104,19 +1107,20 @@ namespace Galvanika
                                 }
                                 else
                                 {
-                                    break;
-                                    for (int j = i; j <= item.Value; j++)
-                                    {
-                                        int count = 0;
-                                        ProgramData valueNext = DataGridTable[j + 1];
-                                        if (valueNext.Operator == "=")
-                                        {
-                                            DataWrite(valueNext, "false");//Обнуляем маркер
-                                            i = i + count + 1; //чтоб ее перепрыгнуло
-                                            break;
-                                        }
-                                        count++;
-                                    }
+                                    output = "false";
+                                    //break;
+                                    //for (int j = i; j <= item.Value; j++)
+                                    //{
+                                    //    int count = 0;
+                                    //    ProgramData valueNext = DataGridTable[j + 1];
+                                    //    if (valueNext.Operator == "=")
+                                    //    {
+                                    //        DataWrite(valueNext, "false");//Обнуляем маркер
+                                    //        i = i + count + 1; //чтоб ее перепрыгнуло
+                                    //        break;
+                                    //    }
+                                    //    count++;
+                                    //}
                                 }
                             }
                         }
