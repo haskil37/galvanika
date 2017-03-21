@@ -1790,6 +1790,7 @@ namespace Galvanika
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             SaveTextBoxes(tabControl);
+            tabControl.SelectedIndex = 0;
         }
         private Boolean IsTextAllowed(String text)
         {
