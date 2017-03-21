@@ -231,7 +231,7 @@ namespace Galvanika
                             var result = new ProgramData(countKey, item, stringData[0], stringData[1], stringData[2], "", "", "");
                             DataGridTable.Add(result);
                             if (stringData.Contains("FP"))
-                                FrontP.Add(countKey.ToString(), 1);
+                                FrontP.Add(countKey.ToString(), 0);
                             if (stringData.Contains("FN"))
                                 FrontN.Add(countKey.ToString(), 0);
                         }
@@ -297,7 +297,7 @@ namespace Galvanika
                     var value = TimerGridTable.Where(u => u.Address == item.Key).SingleOrDefault();
                     if (value.Time < value.EndTime && value.Time != -1 && value.Value != 0)
                         value.Time += 100;
-                    else if (value.Time == value.EndTime)
+                    else if (value.Time >= value.EndTime)
                     {
 
                         value.Value = 0;
@@ -896,14 +896,14 @@ namespace Galvanika
                                     {
                                         FrontP[value.Key.ToString()] = 1;
                                         DataWrite(value, "true");
-                                        //output = "";
+                                        output = "true";
                                     }
                                     else
                                     {
                                         //DataWrite(value, "false");
                                         if (FrontP[value.Key.ToString()] == 1)
                                             FrontP[value.Key.ToString()] = 0;
-                                        output = "false";
+                                        output = "";
                                         int count = 0;
                                         for (int j = i; j <= item.Value; j++)
                                         {
@@ -924,7 +924,7 @@ namespace Galvanika
                                 }
                                 else
                                 {      //Перескакиваем фронт
-                                    output = "false";
+                                    output = "";
                                     int count = 0;
                                     for (int j = i; j <= item.Value; j++)
                                     {
@@ -1013,7 +1013,7 @@ namespace Galvanika
                                     if (Convert.ToInt32(tempValue) == 1)
                                     {
                                         FrontN[value.Key.ToString()] = 1;
-                                        output = "false";
+                                        output = "";
                                         int count = 0;
                                         for (int j = i; j <= item.Value; j++)
                                         {
@@ -1037,14 +1037,14 @@ namespace Galvanika
                                         {
                                             DataWrite(value, "true");
                                             FrontN[value.Key.ToString()] = 0;
-                                            //output = "";
+                                            output = "true";
                                         }
                                     }
                                 }
                                 else
                                 //Перескакиваем в конец фронта
                                 {
-                                    output = "false";
+                                    output = "";
                                     int count = 0;
                                     for (int j = i; j <= item.Value; j++)
                                     {
@@ -1606,16 +1606,27 @@ namespace Galvanika
             switch (((Button)sender).TabIndex)
             {
                 case 1:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (DB["0.3"].ToLower() == "true")
                         CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
                     else
                     {
-                        ResetAll();
-                        ParseDB();
+                        Confirm.Visibility = Visibility.Visible;
+                        tabControl.SelectedIndex = 4;
+                        tabControl.Focus();
+                        break;
+                        //ResetAll();
+                        //ParseDB();
+                        //backgroundWorker.CancelAsync();
                     }
+
+                    tabControl.SelectedIndex = 0;
                     button_Start.Focus();
                     break;
                 case 2:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (DB["54.3"].ToLower() == "false")
                     {
                         DB["54.3"] = "true";
@@ -1628,6 +1639,8 @@ namespace Galvanika
                     }
                     break;
                 case 3:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (tabControl.SelectedIndex != 1)
                         tabControl.SelectedIndex = 1;
                     else
@@ -1635,6 +1648,8 @@ namespace Galvanika
                     button_Stekanie.Focus();
                     break;
                 case 4:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (tabControl.SelectedIndex != 2)
                     {
                         tabControl.SelectedIndex = 2;
@@ -1650,6 +1665,8 @@ namespace Galvanika
                     }
                     break;
                 case 5:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (tabControl.SelectedIndex != 3)
                         tabControl.SelectedIndex = 3;
                     else
@@ -1665,12 +1682,16 @@ namespace Galvanika
             switch (e.Key)
             {
                 case Key.F1:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (DB["0.3"].ToLower() == "true")
                         CustomMessageBox.Show("Для того чтобы запустить программу с нуля, нужно выключить автоматический режим");
                     else
                     {
                         Confirm.Visibility = Visibility.Visible;
-
+                        tabControl.SelectedIndex = 4;
+                        tabControl.Focus();
+                        break;
                         //ResetAll();
                         //ParseDB();
                         //backgroundWorker.CancelAsync();
@@ -1681,17 +1702,23 @@ namespace Galvanika
                     break;
                 case Key.Escape:
                     if (Confirm.Visibility == Visibility.Visible)
+                    {
                         Confirm.Visibility = Visibility.Hidden;
+                        tabControl.SelectedIndex = 0;
+                    }
                     break;
                 case Key.Enter:
                     if (Confirm.Visibility == Visibility.Visible)
                     {
                         Confirm.Visibility = Visibility.Hidden;
+                        tabControl.SelectedIndex = 0;
                         ResetAll();
                         ParseDB();
                     }
                     break;
                 case Key.F2:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (DB["54.3"].ToLower() == "false")
                     {
                         DB["54.3"] = "true";
@@ -1705,6 +1732,8 @@ namespace Galvanika
                     //                    button_Stop.Focus();
                     break;
                 case Key.F3:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (tabControl.SelectedIndex != 1)
                         tabControl.SelectedIndex = 1;
                     else
@@ -1712,6 +1741,8 @@ namespace Galvanika
                     button_Stekanie.Focus();
                     break;
                 case Key.F4:
+                    if (tabControl.SelectedIndex == 4)
+                        break;
                     if (tabControl.SelectedIndex != 2)
                     {
                         tabControl.SelectedIndex = 2;
@@ -1727,7 +1758,9 @@ namespace Galvanika
                     button_Info.Focus();
                     break;
                 case Key.F5:
-                    if(tabControl.SelectedIndex != 3)
+                    if (tabControl.SelectedIndex == 4)
+                        break;
+                    if (tabControl.SelectedIndex != 3)
                         tabControl.SelectedIndex = 3;
                     else
                         tabControl.SelectedIndex = 0;
@@ -1872,10 +1905,7 @@ namespace Galvanika
             else
                 ProgramString.Visibility = Visibility.Hidden;
         }
-        private void timer_Tick_Input(object sender, EventArgs e)
-        {
-            //InputData = rsh.Read(); //Считываем с платы и обновляем InputData
-        }
+
         private void ResetAll()
         {
             InputData = new List<int>() { 0, 0, 0, 0 };

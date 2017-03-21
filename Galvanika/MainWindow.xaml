@@ -135,25 +135,6 @@
         </Grid>
 
 
-        <Grid x:Name="Confirm" Width="600" Height="100" Grid.RowSpan="3" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="3" Visibility="Hidden" Background="Black">
-            <Rectangle Stroke="Red" StrokeThickness="2" Grid.RowSpan="6"/>
-            <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <DockPanel LastChildFill="true" HorizontalAlignment="Center">
-                        <Label Content="Для подтверждения запуска программы с нуля нажмите" VerticalAlignment="Center" Foreground="Lime" FontSize="20" />
-                        <Label Content="Enter" VerticalAlignment="Center" Foreground="Red" FontSize="20" />
-                    </DockPanel>
-                    <DockPanel LastChildFill="true" Grid.Row="1"  HorizontalAlignment="Center">
-                        <Label Content="для возврата к работе нажмите" VerticalAlignment="Center" Foreground="Lime" FontSize="20" />
-                        <Label Content="Esc" VerticalAlignment="Center" Foreground="Red" FontSize="20" />
-                    </DockPanel>
-                </Grid>
-            </Label>
-        </Grid>
 
 
 
@@ -795,6 +776,27 @@
                             <Label Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Content="сбой программы" Foreground="Lime"/>
                         </Grid>
                     </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <Grid x:Name="Confirm" Width="600" Height="100" Grid.RowSpan="3" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="3" Visibility="Hidden" Background="Black">
+                    <Rectangle Stroke="Red" StrokeThickness="2" Grid.RowSpan="6"/>
+                    <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <DockPanel LastChildFill="true" HorizontalAlignment="Center">
+                                <Label Content="Для подтверждения запуска программы с нуля нажмите" VerticalAlignment="Center" Foreground="Lime" FontSize="20" />
+                                <Label Content="Enter" VerticalAlignment="Center" Foreground="Red" FontSize="20" />
+                            </DockPanel>
+                            <DockPanel LastChildFill="true" Grid.Row="1"  HorizontalAlignment="Center">
+                                <Label Content="для возврата к работе нажмите" VerticalAlignment="Center" Foreground="Lime" FontSize="20" />
+                                <Label Content="Esc" VerticalAlignment="Center" Foreground="Red" FontSize="20" />
+                            </DockPanel>
+                        </Grid>
+                    </Label>
                 </Grid>
             </TabItem>
         </TabControl>
