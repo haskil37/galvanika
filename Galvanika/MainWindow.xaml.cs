@@ -471,7 +471,6 @@ namespace Galvanika
             if (!openFile)
                 return;
 
-            FillTextBoxes();
 
             backgroundWorker.DoWork += backgroundWorker_DoWork;
             backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
@@ -1645,7 +1644,8 @@ namespace Galvanika
                         tabControl.SelectedIndex = 1;
                     else
                         tabControl.SelectedIndex = 0;
-                    button_Stekanie.Focus();
+                    FillTextBoxes();
+                    tabControl.Focus();
                     break;
                 case 4:
                     if (tabControl.SelectedIndex == 4)
@@ -1738,7 +1738,8 @@ namespace Galvanika
                         tabControl.SelectedIndex = 1;
                     else
                         tabControl.SelectedIndex = 0;
-                    button_Stekanie.Focus();
+                    FillTextBoxes();
+                    tabControl.Focus();
                     break;
                 case Key.F4:
                     if (tabControl.SelectedIndex == 4)
