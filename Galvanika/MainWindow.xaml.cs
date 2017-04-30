@@ -41,7 +41,7 @@ namespace Galvanika
         public BackgroundWorker backgroundWorker = new BackgroundWorker();
 
         public Dictionary<string, int> Stek = new Dictionary<string, int>();
-
+        public int GlobalCikl = 0;
         RSH rsh = new RSH();
         #endregion
         #region Отправка выражения в парсер
@@ -540,6 +540,10 @@ namespace Galvanika
                     }
                     else //Cчитываем дальше
                     {
+                        if ( i==419 && InputData[3]==129)
+                        { }
+
+
                         string thisOperator = "";
                         if (value.Operator.Contains(")"))
                         {
@@ -1142,14 +1146,16 @@ namespace Galvanika
             }
             if (DB["54.5"].ToLower() == "true" && !timeCikl)
             {
-                timee = 1;
+                timee = 0;
+                GlobalCikl++;
+                if (GlobalCikl > 6)
+                    GlobalCikl = 1;
                 timeCikl = true;
             }
-            //else if (DB["54.5"].ToLower() == "true")
-            //    time++;
-            else if (DB["54.5"].ToLower() == "false")
+            if (DB["54.5"].ToLower() == "false")
             {
                 timee = 0;
+                GlobalCikl = 0;
                 timeCikl = false;
             }
             if (newProgram == 1)
@@ -1160,112 +1166,135 @@ namespace Galvanika
 
         private void timerForVisualDataRefresh()
         {
-                for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
+            {
+                var tempBits = Convert.ToString(InputData[i], 2);
+                while (tempBits.Length < 8)
+                    tempBits = tempBits.Insert(0, "0");
+                tempBits = ReverseString(tempBits);
+                for (int j = 0; j <= tempBits.Length; j++)
                 {
-                    var tempBits = Convert.ToString(InputData[i], 2);
-                    while (tempBits.Length < 8)
-                        tempBits = tempBits.Insert(0, "0");
-                    tempBits = ReverseString(tempBits);
-                    for (int j = 0; j <= tempBits.Length; j++)
+                    CheckBox chekbox = tabControl.FindName("Input" + i + "Bit" + j) as CheckBox;
+                    if (chekbox != null)
                     {
-                        CheckBox chekbox = tabControl.FindName("Input" + i + "Bit" + j) as CheckBox;
-                        if (chekbox != null)
-                        {
-                            if (tempBits[j] == '1')
-                                chekbox.IsChecked = true;
-                            else
-                                chekbox.IsChecked = false;
-                        }
+                        if (tempBits[j] == '1')
+                            chekbox.IsChecked = true;
+                        else
+                            chekbox.IsChecked = false;
                     }
                 }
-                for (int i = 0; i < 3; i++)
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                var tempBits = Convert.ToString(OutputData[i], 2);
+                while (tempBits.Length < 8)
+                    tempBits = tempBits.Insert(0, "0");
+                tempBits = ReverseString(tempBits);
+                for (int j = 0; j <= tempBits.Length; j++)
                 {
-                    var tempBits = Convert.ToString(OutputData[i], 2);
-                    while (tempBits.Length < 8)
-                        tempBits = tempBits.Insert(0, "0");
-                    tempBits = ReverseString(tempBits);
-                    for (int j = 0; j <= tempBits.Length; j++)
+                    CheckBox chekbox = tabControl.FindName("Output" + i + "Bit" + j) as CheckBox;
+                    if (chekbox != null)
                     {
-                        CheckBox chekbox = tabControl.FindName("Output" + i + "Bit" + j) as CheckBox;
-                        if (chekbox != null)
-                        {
-                            if (tempBits[j] == '1')
-                                chekbox.IsChecked = true;
-                            else
-                                chekbox.IsChecked = false;
-                        }
+                        if (tempBits[j] == '1')
+                            chekbox.IsChecked = true;
+                        else
+                            chekbox.IsChecked = false;
                     }
                 }
-                //Обновляем таблицу действий операторов
-                zadOp1.Content = DB["46"];
-                zadOp2.Content = DB["44"];
-                istOp1.Content = DB["52"];
-                istOp2.Content = DB["42"];
-                rasOp1.Content = DB["50"];
-                rasOp2.Content = DB["40"];
+            }
+            //Обновляем таблицу действий операторов
+            zadOp1.Content = DB["46"];
+            zadOp2.Content = DB["44"];
+            istOp1.Content = DB["52"];
+            istOp2.Content = DB["42"];
+            rasOp1.Content = DB["50"];
+            rasOp2.Content = DB["40"];
 
-                deyOp1.Foreground = new SolidColorBrush(Colors.Lime);
-                deyOp2.Foreground = new SolidColorBrush(Colors.Lime);
+            deyOp1.Foreground = new SolidColorBrush(Colors.Lime);
+            if (DB["0.2"].ToLower() == "true")
+                deyOp1.Content = "Исходное";
+            else
+                deyOp1.Content = "";
+            if (DB["1.0"].ToLower() == "true")
+                deyOp1.Content = "Ожидание";
+            if (DB["1.1"].ToLower() == "true")
+                deyOp1.Content = "Подъем";
+            if (DB["1.2"].ToLower() == "true")
+                deyOp1.Content = "Опускание";
+            if (DB["1.5"].ToLower() == "true")
+                deyOp1.Content = "Ход влево";
+            if (DB["1.6"].ToLower() == "true")
+                deyOp1.Content = "Ход вправо";
+            if (DB["54.4"].ToLower() == "true")
+                deyOp1.Content = "Ожидание загрузки";
+            if (DB["54.6"].ToLower() == "true")
+                deyOp1.Content = "Выдержка";
+            if (DB["0.5"].ToLower() == "true")
+            {
+                deyOp1.Foreground = new SolidColorBrush(Colors.Red);
+                ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка позиции");
+                deyOp1.Content = "Ошибка позиции";
+            }
+            if (DB["1.7"].ToLower() == "true")
+            {
+                deyOp1.Foreground = new SolidColorBrush(Colors.Red);
+                ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка датчиков");
+                deyOp1.Content = "Ошибка датчиков";
+            }
 
-                if (DB["0.2"].ToLower() == "true")
-                    deyOp1.Content = "Исходное";
-                else
-                    deyOp1.Content = "";
 
-                if (DB["0.5"].ToLower() == "true")
-                {
-                    deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                    deyOp1.Content = "Ошибка позиции";
-                }
-                if (DB["1.0"].ToLower() == "true")
-                    deyOp1.Content = "Ожидание";
-                if (DB["1.1"].ToLower() == "true")
-                    deyOp1.Content = "Подъем";
-                if (DB["1.2"].ToLower() == "true")
-                    deyOp1.Content = "Опускание";
-                if (DB["1.5"].ToLower() == "true")
-                    deyOp1.Content = "Ход влево";
-                if (DB["1.6"].ToLower() == "true")
-                    deyOp1.Content = "Ход вправо";
-                if (DB["1.7"].ToLower() == "true")
-                {
-                    deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                    deyOp1.Content = "Ошибка датчиков";
-                }
-                if (DB["54.4"].ToLower() == "true")
-                    deyOp1.Content = "Ожидание загрузки";
 
-                if (DB["0.1"].ToLower() == "true")
-                    deyOp2.Content = "Исходное";
-                else
-                    deyOp2.Content = "";
-                if (DB["0.6"].ToLower() == "true")
-                {
-                    deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                    deyOp2.Content = "Ошибка позиции";
-                }
-                if (DB["0.7"].ToLower() == "true")
-                    deyOp2.Content = "Ожидание";
-                if (DB["1.3"].ToLower() == "true")
-                    deyOp2.Content = "Подъем";
-                if (DB["1.4"].ToLower() == "true")
-                    deyOp2.Content = "Опускание";
-                if (DB["54.0"].ToLower() == "true")
-                    deyOp2.Content = "Ход влево";
-                if (DB["54.1"].ToLower() == "true")
-                    deyOp2.Content = "Ход вправо";
-                if (DB["54.2"].ToLower() == "true")
-                {
-                    deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                    deyOp2.Content = "Ошибка датчиков";
-                }
-                if (DB["54.4"].ToLower() == "true")
-                    deyOp2.Content = "Ожидание загрузки";
+            deyOp2.Foreground = new SolidColorBrush(Colors.Lime);
+            if (DB["0.1"].ToLower() == "true")
+                deyOp2.Content = "Исходное";
+            else
+                deyOp2.Content = "";
+            if (DB["0.7"].ToLower() == "true")
+                deyOp2.Content = "Ожидание";
+            if (DB["1.3"].ToLower() == "true")
+                deyOp2.Content = "Подъем";
+            if (DB["1.4"].ToLower() == "true")
+                deyOp2.Content = "Опускание";
+            if (DB["54.0"].ToLower() == "true")
+                deyOp2.Content = "Ход влево";
+            if (DB["54.1"].ToLower() == "true")
+                deyOp2.Content = "Ход вправо";
+            if (DB["54.4"].ToLower() == "true")
+                deyOp2.Content = "Ожидание загрузки";
+            if (DB["54.7"].ToLower() == "true")
+                deyOp2.Content = "Выдержка";
+            if (DB["0.6"].ToLower() == "true")
+            {
+                deyOp2.Foreground = new SolidColorBrush(Colors.Red);
+                ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка позиции");
+                deyOp2.Content = "Ошибка позиции";
+            }
+            if (DB["54.2"].ToLower() == "true")
+            {
+                deyOp2.Foreground = new SolidColorBrush(Colors.Red);
+                ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка датчиков");
+                deyOp2.Content = "Ошибка датчиков";
+            }
+        }
+        private void ErrorLog(string Operation, int Operator, string Error)
+        {
+            using (var fileStream = new FileStream("Log.txt", FileMode.Append))
+            using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
+            {
+                string item = "\n*******************";
+                item += "\nВремя: " + DateTime.Now.ToString("F");
+                item += ".\nЦикл №" + GlobalCikl;
+                item += "\nОператор 1 - " + Operation;
+                if (Operator == 1)
+                    item += " / Ошибка: " + Error;
+                item += "\nЗаданная позиция: " + DB["46"] + ", Истинная позиция: " + DB["52"] + ", Расчетная позиция: " + DB["50"];
+                item += "\nОператор 2 - " + Operation;
+                if (Operator == 2)
+                    item += " / Ошибка: " + Error;
+                item += "\nЗаданная позиция: " + DB["44"] + ", Истинная позиция: " + DB["42"] + ", Расчетная позиция: " + DB["40"];
 
-                if (DB["54.6"].ToLower() == "true")
-                    deyOp1.Content = "Выдержка";
-                if (DB["54.7"].ToLower() == "true")
-                    deyOp2.Content = "Выдержка";
+                streamWriter.WriteLine(item);
+            }
         }
         private string ReverseString(string s)
         {
@@ -1779,6 +1808,10 @@ namespace Galvanika
                     if (tabControl.SelectedIndex == 2)
                         if (Program4.IsEnabled)
                             Program_Click(Program4, null);
+                    break;
+                case Key.A:
+                    //InputData[3] = 129;
+                   // DB["54.5"]= "false";
                     break;
                 default:
                     break;
