@@ -799,6 +799,18 @@
                     </Label>
                 </Grid>
             </TabItem>
+            <TabItem>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="0.05*"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer x:Name="Scroll">
+                        <Label x:Name="Log" Foreground="Lime"></Label>
+                    </ScrollViewer>
+                    <Button x:Name="Clear" Grid.Row="1" Content="Очистить" Cursor="Hand" HorizontalAlignment="Center" MinWidth="300" FontWeight="Bold" FontSize="15" TabIndex="22" VerticalAlignment="Bottom" Click="Clear_Click"/>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

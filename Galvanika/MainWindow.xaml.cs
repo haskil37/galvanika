@@ -1234,12 +1234,16 @@ namespace Galvanika
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
                 ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка позиции");
                 deyOp1.Content = "Ошибка позиции";
+                if (tabControl.TabIndex == 5)
+                    LoadLog();
             }
             if (DB["1.7"].ToLower() == "true")
             {
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
                 ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка датчиков");
                 deyOp1.Content = "Ошибка датчиков";
+                if (tabControl.TabIndex == 5)
+                    LoadLog();
             }
 
 
@@ -1268,12 +1272,16 @@ namespace Galvanika
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
                 ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка позиции");
                 deyOp2.Content = "Ошибка позиции";
+                if (tabControl.TabIndex == 5)
+                    LoadLog();
             }
             if (DB["54.2"].ToLower() == "true")
             {
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
                 ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка датчиков");
                 deyOp2.Content = "Ошибка датчиков";
+                if (tabControl.TabIndex == 5)
+                    LoadLog();
             }
         }
         private void ErrorLog(string Operation, int Operator, string Error)
@@ -1797,7 +1805,19 @@ namespace Galvanika
                     button_Service.Focus();
                     break;
                 case Key.F6:
+                    //ErrorLog("", 3, "");
+                    //LoadLog();
                     //StartTest();
+                    break;
+                case Key.F12:
+                    if (tabControl.SelectedIndex != 5)
+                    {
+                        LoadLog();
+                        Scroll.ScrollToBottom();
+                        tabControl.SelectedIndex = 5;
+                    }
+                    else
+                        tabControl.SelectedIndex = 0;
                     break;
                 case Key.D3:
                     if (tabControl.SelectedIndex == 2)
@@ -1809,13 +1829,37 @@ namespace Galvanika
                         if (Program4.IsEnabled)
                             Program_Click(Program4, null);
                     break;
-                case Key.A:
-                    //InputData[3] = 129;
-                   // DB["54.5"]= "false";
+                case Key.PageDown:
+                    if (tabControl.SelectedIndex == 5)
+                        Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + 100);
+                    break;
+                case Key.PageUp:
+                    if (tabControl.SelectedIndex == 5)
+                        Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset - 100);
                     break;
                 default:
                     break;
             }
+        }
+        private void LoadLog()
+        {
+            using (StreamReader fs = new StreamReader("Log.txt", Encoding.Default))
+            {
+                Log.Content = "";
+                while (true)
+                {
+                    string read = fs.ReadLine();
+                    if (read == null) break;
+                    Log.Content += read + "\n";
+                }
+            }
+        }
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            using (var fileStream = new FileStream("Log.txt", FileMode.Truncate))
+                using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
+                    streamWriter.WriteLine("");
+            LoadLog();
         }
         private void Window_Closing(object sender, CancelEventArgs e)
         {
@@ -1973,5 +2017,6 @@ namespace Galvanika
 
         }
         #endregion
+
     }
 }
