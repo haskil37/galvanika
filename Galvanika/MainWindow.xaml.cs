@@ -42,6 +42,8 @@ namespace Galvanika
 
         public Dictionary<string, int> Stek = new Dictionary<string, int>();
         public int GlobalCikl = 0;
+        public string LogPath = "Log.txt";
+
         RSH rsh = new RSH();
         #endregion
         #region Отправка выражения в парсер
@@ -1286,7 +1288,7 @@ namespace Galvanika
         }
         private void ErrorLog(string Operation, int Operator, string Error)
         {
-            using (var fileStream = new FileStream("Log.txt", FileMode.Append))
+            using (var fileStream = new FileStream(LogPath, FileMode.Append))
             using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
             {
                 string item = "\n*******************";
@@ -1843,22 +1845,24 @@ namespace Galvanika
         }
         private void LoadLog()
         {
-            using (StreamReader fs = new StreamReader("Log.txt", Encoding.Default))
-            {
-                Log.Content = "";
-                while (true)
+            if (File.Exists(LogPath))
+                using (StreamReader fs = new StreamReader(LogPath, Encoding.Default))
                 {
-                    string read = fs.ReadLine();
-                    if (read == null) break;
-                    Log.Content += read + "\n";
+                    Log.Content = "";
+                    while (true)
+                    {
+                        string read = fs.ReadLine();
+                        if (read == null) break;
+                        Log.Content += read + "\n";
+                    }
                 }
-            }
         }
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            using (var fileStream = new FileStream("Log.txt", FileMode.Truncate))
-                using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
-                    streamWriter.WriteLine("");
+            if (File.Exists(LogPath))
+                using (var fileStream = new FileStream(LogPath, FileMode.Truncate))
+                    using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
+                        streamWriter.WriteLine("");
             LoadLog();
         }
         private void Window_Closing(object sender, CancelEventArgs e)
