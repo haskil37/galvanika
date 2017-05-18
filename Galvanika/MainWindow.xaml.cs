@@ -55,7 +55,7 @@ namespace Galvanika
         }
         #endregion
         #region Чтение файла с программой
-        private string Path = "3.AWL";
+        private string Path;
         private List<string> tempDB;
         private List<string> tempProgramList;
         private bool ReadFileDB()
@@ -467,6 +467,18 @@ namespace Galvanika
         public MainWindow()
         {
             InitializeComponent();
+            if (File.Exists("!3.AWL"))
+            {
+                Path = "4.AWL";
+                Program3.IsEnabled = true;
+                Program4.IsEnabled = false;
+            }
+            else
+            {
+                Path = "3.AWL";
+                Program3.IsEnabled = false;
+                Program4.IsEnabled = true;
+            }
             AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
             //button_Start.Focus();
             var openFile = ReadFileDB();
@@ -1234,7 +1246,12 @@ namespace Galvanika
             if (DB["0.5"].ToLower() == "true")
             {
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка позиции");
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                (ThreadStart)delegate ()
+                {
+                    ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка позиции");
+                }
+                );
                 deyOp1.Content = "Ошибка позиции";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
@@ -1242,7 +1259,12 @@ namespace Galvanika
             if (DB["1.7"].ToLower() == "true")
             {
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка датчиков");
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                (ThreadStart)delegate ()
+                {
+                    ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка датчиков");
+                }
+                );
                 deyOp1.Content = "Ошибка датчиков";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
@@ -1272,7 +1294,12 @@ namespace Galvanika
             if (DB["0.6"].ToLower() == "true")
             {
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка позиции");
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                (ThreadStart)delegate ()
+                {
+                    ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка позиции");
+                }
+                );
                 deyOp2.Content = "Ошибка позиции";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
@@ -1280,7 +1307,12 @@ namespace Galvanika
             if (DB["54.2"].ToLower() == "true")
             {
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка датчиков");
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                (ThreadStart)delegate ()
+                {
+                    ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка датчиков");
+                }
+                );
                 deyOp2.Content = "Ошибка датчиков";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
@@ -1288,22 +1320,30 @@ namespace Galvanika
         }
         private void ErrorLog(string Operation, int Operator, string Error)
         {
-            using (var fileStream = new FileStream(LogPath, FileMode.Append))
-            using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
+            if (!File.Exists(LogPath))
             {
-                string item = "\n*******************";
-                item += "\nВремя: " + DateTime.Now.ToString("F");
-                item += ".\nЦикл №" + GlobalCikl;
-                item += "\nОператор 1 - " + Operation;
-                if (Operator == 1)
-                    item += " / Ошибка: " + Error;
-                item += "\nЗаданная позиция: " + DB["46"] + ", Истинная позиция: " + DB["52"] + ", Расчетная позиция: " + DB["50"];
-                item += "\nОператор 2 - " + Operation;
-                if (Operator == 2)
-                    item += " / Ошибка: " + Error;
-                item += "\nЗаданная позиция: " + DB["44"] + ", Истинная позиция: " + DB["42"] + ", Расчетная позиция: " + DB["40"];
+                using (var fileStream = new FileStream(LogPath, FileMode.CreateNew))
+                {
+                }
+            }
+            using (var fileStream = new FileStream(LogPath, FileMode.Append))
+            {
+                using (var streamWriter = new StreamWriter(fileStream, Encoding.Default))
+                {
+                    string item = "\n*******************";
+                    item += "\nВремя: " + DateTime.Now.ToString("F");
+                    item += ".\nЦикл №" + GlobalCikl;
+                    item += "\nОператор 1 - " + Operation;
+                    if (Operator == 1)
+                        item += " / Ошибка: " + Error;
+                    item += "\nЗаданная позиция: " + DB["46"] + ", Истинная позиция: " + DB["52"] + ", Расчетная позиция: " + DB["50"];
+                    item += "\nОператор 2 - " + Operation;
+                    if (Operator == 2)
+                        item += " / Ошибка: " + Error;
+                    item += "\nЗаданная позиция: " + DB["44"] + ", Истинная позиция: " + DB["42"] + ", Расчетная позиция: " + DB["40"];
 
-                streamWriter.WriteLine(item);
+                    streamWriter.WriteLine(item);
+                }
             }
         }
         private string ReverseString(string s)
@@ -1807,7 +1847,12 @@ namespace Galvanika
                     button_Service.Focus();
                     break;
                 case Key.F6:
-                    //ErrorLog("", 3, "");
+                    //this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    //(ThreadStart)delegate ()
+                    //{
+                    //    ErrorLog("", 3, "");
+                    //}
+                    //);
                     //LoadLog();
                     //StartTest();
                     break;
@@ -1948,6 +1993,8 @@ namespace Galvanika
                 if (pressButton.Name == "Program3")
                 {
                     ProgramString.Content = "Выбрана программа 3";
+                    File.Move("!3.AWL", "3.AWL");
+                    File.Move("4.AWL", "!4.AWL");
                     Path = "3.AWL";
                     Program3.IsEnabled = false;
                     Program4.IsEnabled = true;
@@ -1957,6 +2004,8 @@ namespace Galvanika
                 if (pressButton.Name == "Program4")
                 {
                     ProgramString.Content = "Выбрана программа 4";
+                    File.Move("!4.AWL", "4.AWL");
+                    File.Move("3.AWL", "!3.AWL");
                     Path = "4.AWL";
                     Program4.IsEnabled = false;
                     Program3.IsEnabled = true;
@@ -2021,6 +2070,5 @@ namespace Galvanika
 
         }
         #endregion
-
     }
 }

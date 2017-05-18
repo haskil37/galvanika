@@ -340,7 +340,7 @@
                         <ColumnDefinition Width=".4*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="Program3"  Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" Height="40" Cursor="Hand" TabIndex="1" IsEnabled="False" Click="Program_Click">Программа №3</Button>
+                    <Button x:Name="Program3"  Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" Height="40" Cursor="Hand" TabIndex="1" Click="Program_Click">Программа №3</Button>
                     <Button x:Name="Program4" HorizontalAlignment="Left" Grid.RowSpan="3" Grid.Row="2" VerticalAlignment="Center" Width="150" Height="40" Cursor="Hand" TabIndex="2" Click="Program_Click">Программа №4</Button>
                     <Grid Grid.Column="1" Grid.RowSpan="3" Grid.Row="0" Height="60" VerticalAlignment="Center" Margin="0,-25,0,0">
                         <Grid.ColumnDefinitions>
