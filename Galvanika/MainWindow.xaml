@@ -147,7 +147,7 @@
         <Label x:Name="currentTimeElapse" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Lime"/>
 
         <Label x:Name="ErrorString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red" Content="Не удалось отправить выходные данные на плату" Visibility="Hidden"/>
-        <Label x:Name="ProgramString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Lime" Content="Выбрана программа 3" Visibility="Hidden"/>
+        <Label x:Name="ProgramString" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Lime" Visibility="Hidden"/>
 
         <Button x:Name="button_Start" Margin="5" Grid.Row="2" Cursor="Hand" Click="button_Menu_Click" TabIndex="1" >
             <TextBlock TextAlignment="Center" FontWeight="Bold" FontSize="15">F1. Запуск линии<LineBreak/>с нулевого положения</TextBlock>
@@ -477,12 +477,12 @@
                         <Rectangle Stroke="Lime" Grid.Column="20" Grid.Row="1"/>
                         <Label Content="Ш" Foreground="Lime" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Б" Foreground="Lime" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Б" Foreground="Lime" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Ш" Foreground="Lime" Grid.Column="8" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Б" Foreground="Lime" Grid.Column="9" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Ш" Foreground="Lime" Grid.Column="12" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Б" Foreground="Lime" Grid.Column="16" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <Label Content="Ш" Foreground="Lime" Grid.Column="18" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="8" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="9" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="12" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Ш" Foreground="Lime" Grid.Column="16" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Б" Foreground="Lime" Grid.Column="18" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Б" Foreground="Lime" Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Б" Foreground="Lime" Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Label Content="Б" Foreground="Lime" Grid.Column="13" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -805,9 +805,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="0.05*"/>
                     </Grid.RowDefinitions>
-                    <ScrollViewer x:Name="Scroll">
-                        <Label x:Name="Log" Foreground="Lime"></Label>
-                    </ScrollViewer>
+                    <Label x:Name="Log" Foreground="Lime"></Label>
                     <Button x:Name="Clear" Grid.Row="1" Content="Очистить" Cursor="Hand" HorizontalAlignment="Center" MinWidth="300" FontWeight="Bold" FontSize="15" TabIndex="22" VerticalAlignment="Bottom" Click="Clear_Click"/>
                 </Grid>
             </TabItem>

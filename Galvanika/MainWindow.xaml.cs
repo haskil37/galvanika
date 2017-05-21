@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Threading;
+using System.Windows.Documents;
 
 namespace Galvanika
 {
@@ -42,6 +43,8 @@ namespace Galvanika
 
         public Dictionary<string, int> Stek = new Dictionary<string, int>();
         public int GlobalCikl = 0;
+        public int ErrorOP1 = 0;
+        public int ErrorOP2 = 0;
         public string LogPath = "Log.txt";
 
         RSH rsh = new RSH();
@@ -469,12 +472,14 @@ namespace Galvanika
             InitializeComponent();
             if (File.Exists("!3.AWL"))
             {
+                ProgramString.Content = "Выбрана программа 4";
                 Path = "4.AWL";
                 Program3.IsEnabled = true;
                 Program4.IsEnabled = false;
             }
             else
             {
+                ProgramString.Content = "Выбрана программа 3";
                 Path = "3.AWL";
                 Program3.IsEnabled = false;
                 Program4.IsEnabled = true;
@@ -554,9 +559,9 @@ namespace Galvanika
                     }
                     else //Cчитываем дальше
                     {
-                        if ( i==419 && InputData[3]==129)
+                        if ( value.Code.Contains("T      5"))
                         { }
-
+                     
 
                         string thisOperator = "";
                         if (value.Operator.Contains(")"))
@@ -629,6 +634,9 @@ namespace Galvanika
                                 ProgramData valueNext = DataGridTable[i + 1];
                                 if (valueNext.Operator.Contains("SE"))
                                 {
+                                    if (valueNext.Code.Contains("T      5"))
+                                    { }
+
                                     i = i + 1;
 
                                     if (temp == false) //Обнуляем таймер если SE 
@@ -1246,12 +1254,16 @@ namespace Galvanika
             if (DB["0.5"].ToLower() == "true")
             {
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                (ThreadStart)delegate ()
+                if (ErrorOP1 == 0)
                 {
-                    ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка позиции");
+                    ErrorOP1 = 1;
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (ThreadStart)delegate ()
+                    {
+                        ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка позиции");
+                    }
+                    );
                 }
-                );
                 deyOp1.Content = "Ошибка позиции";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
@@ -1259,16 +1271,24 @@ namespace Galvanika
             if (DB["1.7"].ToLower() == "true")
             {
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                (ThreadStart)delegate ()
+                if (ErrorOP1 == 0)
                 {
-                    ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка датчиков");
+                    ErrorOP1 = 1;
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (ThreadStart)delegate ()
+                    {
+                        ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка датчиков");
+                    }
+                    );
                 }
-                );
                 deyOp1.Content = "Ошибка датчиков";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
             }
+            if (ErrorOP1 == 1)
+                if (DB["0.5"].ToLower() != "true")
+                    if (DB["1.7"].ToLower() != "true")
+                        ErrorOP1 = 0;
 
 
 
@@ -1294,12 +1314,17 @@ namespace Galvanika
             if (DB["0.6"].ToLower() == "true")
             {
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                (ThreadStart)delegate ()
+                if (ErrorOP2 == 0)
                 {
-                    ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка позиции");
+                    ErrorOP2 = 1;
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (ThreadStart)delegate ()
+                    {
+                        ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка позиции");
+                    }
+                    );
                 }
-                );
+
                 deyOp2.Content = "Ошибка позиции";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
@@ -1307,16 +1332,26 @@ namespace Galvanika
             if (DB["54.2"].ToLower() == "true")
             {
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                (ThreadStart)delegate ()
+                if (ErrorOP2 == 0)
                 {
-                    ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка датчиков");
+                    ErrorOP2 = 1;
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (ThreadStart)delegate ()
+                    {
+                        ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка датчиков");
+                    }
+                    );
                 }
-                );
+
                 deyOp2.Content = "Ошибка датчиков";
                 if (tabControl.TabIndex == 5)
                     LoadLog();
             }
+            if (ErrorOP2 == 1)
+                if (DB["0.6"].ToLower() != "true")
+                    if (DB["54.2"].ToLower() != "true")
+                        ErrorOP2 = 0;
+
         }
         private void ErrorLog(string Operation, int Operator, string Error)
         {
@@ -1847,20 +1882,15 @@ namespace Galvanika
                     button_Service.Focus();
                     break;
                 case Key.F6:
-                    //this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    //(ThreadStart)delegate ()
-                    //{
-                    //    ErrorLog("", 3, "");
-                    //}
-                    //);
                     //LoadLog();
                     //StartTest();
+                    //DB["54.2"] = "true";
                     break;
                 case Key.F12:
                     if (tabControl.SelectedIndex != 5)
                     {
                         LoadLog();
-                        Scroll.ScrollToBottom();
+                        //Scroll.ScrollToBottom();
                         tabControl.SelectedIndex = 5;
                     }
                     else
@@ -1876,14 +1906,14 @@ namespace Galvanika
                         if (Program4.IsEnabled)
                             Program_Click(Program4, null);
                     break;
-                case Key.PageDown:
-                    if (tabControl.SelectedIndex == 5)
-                        Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + 100);
-                    break;
-                case Key.PageUp:
-                    if (tabControl.SelectedIndex == 5)
-                        Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset - 100);
-                    break;
+                //case Key.PageDown:
+                //    if (tabControl.SelectedIndex == 5)
+                //        Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset + 100);
+                //    break;
+                //case Key.PageUp:
+                //    if (tabControl.SelectedIndex == 5)
+                //        Scroll.ScrollToVerticalOffset(Scroll.VerticalOffset - 100);
+                //    break;
                 default:
                     break;
             }
@@ -1891,16 +1921,41 @@ namespace Galvanika
         private void LoadLog()
         {
             if (File.Exists(LogPath))
-                using (StreamReader fs = new StreamReader(LogPath, Encoding.Default))
+                using (var sr = new StreamReader(LogPath, Encoding.Default))
                 {
-                    Log.Content = "";
-                    while (true)
-                    {
-                        string read = fs.ReadLine();
-                        if (read == null) break;
-                        Log.Content += read + "\n";
-                    }
+                    string text = sr.ReadToEnd();
+
+                    var document = new FlowDocument();
+                    var paragraph = new Paragraph();
+                    paragraph.Inlines.Add(text);
+                    document.Blocks.Add(paragraph);
+                    document.ColumnWidth = 1000;
+                    Log.Content = document;
                 }
+
+            //var b = new StreamReader(LogPath, Encoding.Default);
+            //FlowDocument flow = new FlowDocument(new Paragraph(new Run(b.ReadToEnd())));
+
+            //Log.Document = flow;
+            //b.Dispose();
+            //b.Close();
+
+
+            //foreach (var item in readText)
+            //{
+            //    Log.Content += item + "\n";
+
+            //}
+            //using (StreamReader fs = new StreamReader(LogPath, Encoding.Default))
+            //{
+            //    Log.Content = "";
+            //    while (true)
+            //    {
+            //        string read = fs.ReadLine();
+            //        if (read == null) break;
+            //        Log.Content += read + "\n";
+            //    }
+            //}
         }
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
@@ -1993,7 +2048,8 @@ namespace Galvanika
                 if (pressButton.Name == "Program3")
                 {
                     ProgramString.Content = "Выбрана программа 3";
-                    File.Move("!3.AWL", "3.AWL");
+                    if (File.Exists("!3.AWL"))
+                        File.Move("!3.AWL", "3.AWL");
                     File.Move("4.AWL", "!4.AWL");
                     Path = "3.AWL";
                     Program3.IsEnabled = false;
@@ -2004,7 +2060,8 @@ namespace Galvanika
                 if (pressButton.Name == "Program4")
                 {
                     ProgramString.Content = "Выбрана программа 4";
-                    File.Move("!4.AWL", "4.AWL");
+                    if (File.Exists("!4.AWL"))
+                        File.Move("!4.AWL", "4.AWL");
                     File.Move("3.AWL", "!3.AWL");
                     Path = "4.AWL";
                     Program4.IsEnabled = false;
