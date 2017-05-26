@@ -559,8 +559,8 @@ namespace Galvanika
                     }
                     else //Cчитываем дальше
                     {
-                        if ( value.Code.Contains("T      5"))
-                        { }
+                        //if ( value.Code.Contains("S     M      9.1"))
+                        //{ }
                      
 
                         string thisOperator = "";
@@ -634,8 +634,8 @@ namespace Galvanika
                                 ProgramData valueNext = DataGridTable[i + 1];
                                 if (valueNext.Operator.Contains("SE"))
                                 {
-                                    if (valueNext.Code.Contains("T      5"))
-                                    { }
+                                    //if (valueNext.Code.Contains("T      5"))
+                                    //{ }
 
                                     i = i + 1;
 
@@ -1196,8 +1196,7 @@ namespace Galvanika
                 tempBits = ReverseString(tempBits);
                 for (int j = 0; j <= tempBits.Length; j++)
                 {
-                    CheckBox chekbox = tabControl.FindName("Input" + i + "Bit" + j) as CheckBox;
-                    if (chekbox != null)
+                    if (tabControl.FindName("Input" + i + "Bit" + j) is CheckBox chekbox)
                     {
                         if (tempBits[j] == '1')
                             chekbox.IsChecked = true;
@@ -1214,8 +1213,7 @@ namespace Galvanika
                 tempBits = ReverseString(tempBits);
                 for (int j = 0; j <= tempBits.Length; j++)
                 {
-                    CheckBox chekbox = tabControl.FindName("Output" + i + "Bit" + j) as CheckBox;
-                    if (chekbox != null)
+                    if (tabControl.FindName("Output" + i + "Bit" + j) is CheckBox chekbox)
                     {
                         if (tempBits[j] == '1')
                             chekbox.IsChecked = true;
@@ -1886,6 +1884,9 @@ namespace Galvanika
                     //StartTest();
                     //DB["54.2"] = "true";
                     break;
+                //case Key.F7:
+                //    DataWrite(DataGridTable[281], "true");
+                //    break;
                 case Key.F12:
                     if (tabControl.SelectedIndex != 5)
                     {
