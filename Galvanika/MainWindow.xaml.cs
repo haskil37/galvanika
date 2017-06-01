@@ -1177,7 +1177,7 @@ namespace Galvanika
             if (DB["54.5"].ToLower() == "false")
             {
                 timee = 0;
-                GlobalCikl = 0;
+                //GlobalCikl = 0;
                 timeCikl = false;
             }
             if (newProgram == 1)
@@ -1231,6 +1231,7 @@ namespace Galvanika
             rasOp2.Content = DB["40"];
 
             deyOp1.Foreground = new SolidColorBrush(Colors.Lime);
+            string op1 = "", op2 = "", error = "";
             if (DB["0.2"].ToLower() == "true")
                 deyOp1.Content = "Исходное";
             else
@@ -1252,43 +1253,21 @@ namespace Galvanika
             if (DB["0.5"].ToLower() == "true")
             {
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                if (ErrorOP1 == 0)
-                {
-                    ErrorOP1 = 1;
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (ThreadStart)delegate ()
-                    {
-                        ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка позиции");
-                    }
-                    );
-                }
+                op1 = deyOp1.Content.ToString();
                 deyOp1.Content = "Ошибка позиции";
-                if (tabControl.TabIndex == 5)
+                error = deyOp1.Content.ToString();
+                if (tabControl.SelectedIndex == 5)
                     LoadLog();
             }
             if (DB["1.7"].ToLower() == "true")
             {
                 deyOp1.Foreground = new SolidColorBrush(Colors.Red);
-                if (ErrorOP1 == 0)
-                {
-                    ErrorOP1 = 1;
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (ThreadStart)delegate ()
-                    {
-                        ErrorLog(deyOp1.Content.ToString(), 1, "Ошибка датчиков");
-                    }
-                    );
-                }
+                op1 = deyOp1.Content.ToString();
                 deyOp1.Content = "Ошибка датчиков";
-                if (tabControl.TabIndex == 5)
+                error = deyOp1.Content.ToString();
+                if (tabControl.SelectedIndex == 5)
                     LoadLog();
             }
-            if (ErrorOP1 == 1)
-                if (DB["0.5"].ToLower() != "true")
-                    if (DB["1.7"].ToLower() != "true")
-                        ErrorOP1 = 0;
-
-
 
             deyOp2.Foreground = new SolidColorBrush(Colors.Lime);
             if (DB["0.1"].ToLower() == "true")
@@ -1312,46 +1291,54 @@ namespace Galvanika
             if (DB["0.6"].ToLower() == "true")
             {
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                if (ErrorOP2 == 0)
-                {
-                    ErrorOP2 = 1;
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (ThreadStart)delegate ()
-                    {
-                        ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка позиции");
-                    }
-                    );
-                }
-
+                op2 = deyOp2.Content.ToString();
                 deyOp2.Content = "Ошибка позиции";
-                if (tabControl.TabIndex == 5)
+                error = deyOp2.Content.ToString();
+                if (tabControl.SelectedIndex == 5)
                     LoadLog();
             }
             if (DB["54.2"].ToLower() == "true")
             {
                 deyOp2.Foreground = new SolidColorBrush(Colors.Red);
-                if (ErrorOP2 == 0)
-                {
-                    ErrorOP2 = 1;
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                    (ThreadStart)delegate ()
-                    {
-                        ErrorLog(deyOp2.Content.ToString(), 2, "Ошибка датчиков");
-                    }
-                    );
-                }
-
+                op2 = deyOp2.Content.ToString();
                 deyOp2.Content = "Ошибка датчиков";
-                if (tabControl.TabIndex == 5)
+                error = deyOp2.Content.ToString();
+                if (tabControl.SelectedIndex == 5)
                     LoadLog();
             }
+
+            if (ErrorOP1 == 1)
+                if (DB["0.5"].ToLower() != "true")
+                    if (DB["1.7"].ToLower() != "true")
+                        ErrorOP1 = 0;
+
             if (ErrorOP2 == 1)
                 if (DB["0.6"].ToLower() != "true")
                     if (DB["54.2"].ToLower() != "true")
                         ErrorOP2 = 0;
+            if (ErrorOP1 == 0 && (DB["0.5"].ToLower() == "true" || DB["1.7"].ToLower() == "true"))
+            {
+                ErrorOP1 = 1;
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                (ThreadStart)delegate ()
+                {
+                    ErrorLog(op1, op2, 1, error);
+                }
+                );
+            }
 
+            if (ErrorOP2 == 0 && (DB["0.6"].ToLower() == "true" || DB["54.2"].ToLower() == "true"))
+            {
+                ErrorOP2 = 1;
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                (ThreadStart)delegate ()
+                {
+                    ErrorLog(op1, op2, 2, error);
+                }
+                );
+            }
         }
-        private void ErrorLog(string Operation, int Operator, string Error)
+        private void ErrorLog(string Operation1, string Operation2, int Operator, string Error)
         {
             if (!File.Exists(LogPath))
             {
@@ -1366,11 +1353,11 @@ namespace Galvanika
                     string item = "\n*******************";
                     item += "\nВремя: " + DateTime.Now.ToString("F");
                     item += ".\nЦикл №" + GlobalCikl;
-                    item += "\nОператор 1 - " + Operation;
+                    item += "\nОператор 1 - " + Operation1;
                     if (Operator == 1)
                         item += " / Ошибка: " + Error;
                     item += "\nЗаданная позиция: " + DB["46"] + ", Истинная позиция: " + DB["52"] + ", Расчетная позиция: " + DB["50"];
-                    item += "\nОператор 2 - " + Operation;
+                    item += "\nОператор 2 - " + Operation2;
                     if (Operator == 2)
                         item += " / Ошибка: " + Error;
                     item += "\nЗаданная позиция: " + DB["44"] + ", Истинная позиция: " + DB["42"] + ", Расчетная позиция: " + DB["40"];
@@ -1879,11 +1866,17 @@ namespace Galvanika
                         tabControl.SelectedIndex = 0;
                     button_Service.Focus();
                     break;
-                case Key.F6:
-                    //LoadLog();
-                    //StartTest();
-                    //DB["54.2"] = "true";
-                    break;
+//                case Key.F6:
+//                    //LoadLog();
+//                    //StartTest();
+//                    DB["54.2"] = "true";
+//                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+//(ThreadStart)delegate ()
+//{
+//    timerForVisualDataRefresh();
+//}
+//);
+//                    break;
                 //case Key.F7:
                 //    DataWrite(DataGridTable[281], "true");
                 //    break;
