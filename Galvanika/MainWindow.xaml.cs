@@ -162,7 +162,7 @@ namespace Galvanika
                         result = new MemoryData(tempIndex, tempNameP[0].Trim(), "integer", value.Trim(), value.Trim());
                     if (tempNameP[1].Contains("TIME"))
                         result = new MemoryData(tempIndex, tempNameP[0].Trim(), "timer", value.Trim(), value.Trim());
-                    if (tempNameP[0].Contains("Stek") && tempNameP[0].Trim() != "Stek2" && tempNameP[0].Trim() != "Stek1")
+                    if (tempNameP[0].Contains("Stek") && tempNameP[0].Trim() != "Stek2" && tempNameP[0].Trim() != "Stek1" || tempNameP[0].Contains("TKOP"))
                     {
                         var tempTimerData = value.ToLower().Split('#');
                         string tempTime;
@@ -1650,6 +1650,12 @@ namespace Galvanika
                     case "Stek_15":
                         SaveToFile(tb.Name, newTime, DB.ElementAt(32));
                         break;
+                    case "Tkop1":
+                        SaveToFile(tb.Name, newTime, DB.ElementAt(50));
+                        break;
+                    case "Tkop2":
+                        SaveToFile(tb.Name, newTime, DB.ElementAt(51));
+                        break;
                 }
             }
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -1657,6 +1663,9 @@ namespace Galvanika
         }
         private void SaveToFile(string Stek, int newTime, KeyValuePair<string, string> DBAdress)
         {
+            if (Stek.Contains("Tkop"))
+                Stek = Stek.ToUpper();
+
             if (DB[DBAdress.Key] == "S5T#" + newTime + "S") //Если неизменилось значение, то выходим
                 return;
 
@@ -2004,6 +2013,8 @@ namespace Galvanika
             Stek_13.Text = (Stek[Stek_13.Name] / 1000).ToString();
             Stek_14.Text = (Stek[Stek_14.Name] / 1000).ToString();
             Stek_15.Text = (Stek[Stek_15.Name] / 1000).ToString();
+            Tkop1.Text = (Stek[Tkop1.Name.ToUpper()] / 1000).ToString();
+            Tkop2.Text = (Stek[Tkop2.Name.ToUpper()] / 1000).ToString();
         }
         private void HandleKeyDownEvent(object sender, KeyEventArgs e)
         {
