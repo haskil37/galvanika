@@ -47,6 +47,8 @@ namespace Galvanika
         public int ErrorOP2 = 0;
         public string LogPath = "Log.txt";
 
+        public bool test = false;
+
         RSH rsh = new RSH();
         #endregion
         #region Отправка выражения в парсер
@@ -522,7 +524,9 @@ namespace Galvanika
         #region Расчет
         private void Calculate()
         {
-            InputData = rsh.Read();
+            if (!test)
+                InputData = rsh.Read();
+
             this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
             (ThreadStart)delegate ()
             {
@@ -1821,6 +1825,24 @@ namespace Galvanika
                         Confirm.Visibility = Visibility.Hidden;
                         tabControl.SelectedIndex = 0;
                         ResetAll();
+                        tempDB = new List<string>();
+                        using (StreamReader fs = new StreamReader(Path, Encoding.Default))
+                        {
+                            int start = 0;
+                            while (true)
+                            {
+                                string temp = fs.ReadLine();
+                                if (temp == null) break;
+                                if (temp.Contains("END_STRUCT"))
+                                    break;
+
+                                if (start == 1)
+                                    tempDB.Add(temp);
+
+                                if (temp.Contains("STRUCT") && start != 1)
+                                    start = 1;
+                            }
+                        }
                         ParseDB();
                     }
                     break;
@@ -1875,17 +1897,17 @@ namespace Galvanika
                         tabControl.SelectedIndex = 0;
                     button_Service.Focus();
                     break;
-//                case Key.F6:
-//                    //LoadLog();
-//                    //StartTest();
-//                    DB["54.2"] = "true";
-//                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-//(ThreadStart)delegate ()
-//{
-//    timerForVisualDataRefresh();
-//}
-//);
-//                    break;
+                case Key.F6:
+                    //LoadLog();
+                    //StartTest();
+                    //                    DB["54.2"] = "true";
+                    //                    this.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    //(ThreadStart)delegate ()
+                    //{
+                    //    timerForVisualDataRefresh();
+                    //}
+                    //);
+                    break;
                 //case Key.F7:
                 //    DataWrite(DataGridTable[281], "true");
                 //    break;
@@ -2102,7 +2124,11 @@ namespace Galvanika
 
         private void ResetAll()
         {
-            InputData = new List<int>() { 0, 0, 0, 0 };
+            if (!test)
+                InputData = new List<int>() { 0, 0, 0, 0 };
+            else
+                InputData = new List<int>() { 124, 126, 93, 1 };
+
             MarkerData = Enumerable.Repeat(0, 20).ToList();
             //MarkerData[0] = 1;
             OutputData = new List<int>() { 0, 0, 0 };
@@ -2112,6 +2138,11 @@ namespace Galvanika
         #region Тестирование
         private void StartTest()
         {
+            if (!test)
+            {
+                test = true;
+                ResetAll();
+            }
             Service.Visibility = Visibility.Visible;
             MyInput0.Text = InputData[0].ToString();
             MyInput1.Text = InputData[1].ToString();
